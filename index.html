@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>بطاقة اليوم الذكية - النسخة الملكية</title>
+  <title>بطاقة اليوم الذكية - النسخة الملكية V3</title>
   
   <!-- مكتبة الخطوط العربية والإنجليزية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +50,7 @@
     }
     
     .top-overlay-bg {
-      background-color: rgba(0, 0, 0, 0.4); /* القيمة الافتراضية للبروز */
+      background-color: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -87,7 +87,7 @@
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">
           بطاقة اليوم <span id="dynamicGreeting" class="text-amber-400 text-sm font-normal"></span>
         </h1>
-        <p class="text-xs text-slate-400">حكمة، أحداث تاريخية، وصوت مدمج باحترافية</p>
+        <p class="text-xs text-slate-400">تحكم كامل، تناسق مثالي، وصوت مدمج باحترافية</p>
       </div>
     </div>
   </header>
@@ -104,9 +104,8 @@
           </h2>
         </div>
 
-        <!-- 1. إزاحة النصوص العلوية وتعتيم الخلفية -->
+        <!-- 1. إزاحة وتعتيم (القسم العلوي) -->
         <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800/80 space-y-3">
-          <!-- الإزاحة الرأسية -->
           <div>
             <div class="flex items-center justify-between text-xs mb-1.5">
               <span class="text-slate-300 font-medium flex items-center gap-1.5">
@@ -117,11 +116,10 @@
             <input type="range" id="dateOffsetSlider" min="-15" max="30" value="0" step="1" oninput="adjustDateOffset(this.value)" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
           </div>
           
-          <!-- بروز الخلفية (التعتيم) -->
           <div class="pt-2 border-t border-slate-800">
             <div class="flex items-center justify-between text-xs mb-1.5">
               <span class="text-slate-300 font-medium flex items-center gap-1.5">
-                <i class="fa-solid fa-fill-drip text-indigo-400 text-[11px]"></i> بروز وتعتيم خلفية (التاريخ والحقوق)
+                <i class="fa-solid fa-fill-drip text-indigo-400 text-[11px]"></i> تعتيم خلفية (التاريخ والحقوق)
               </span>
               <span id="topBgOpacityValue" class="text-indigo-400 font-mono text-[11px]">40%</span>
             </div>
@@ -129,11 +127,11 @@
           </div>
         </div>
 
-        <!-- 2. حقوق التصميم (الجهة اليسرى) -->
+        <!-- 2. حقوق التصميم (الجهة اليسرى) بتنسيق الكلمتين -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-signature text-purple-400"></i> حقوق التصميم (اليسار)
+              <i class="fa-solid fa-signature text-purple-400"></i> حقوق التصميم (يسار)
             </label>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" id="watermarkToggle" checked onchange="toggleElement('watermarkBoxOverlay', this.checked)" class="sr-only peer">
@@ -141,37 +139,42 @@
             </label>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="watermarkTextInput" value="تصميم: @SAB3-77" oninput="updateWatermarkText(this.value)" placeholder="نص الحقوق" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
-            <select onchange="updateWatermarkFont(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
-              <option value="font-cairo" selected>Cairo (عصري)</option>
-              <option value="font-cinzel">Cinzel (كلاسيكي)</option>
-              <option value="font-signature">Great Vibes (توقيع)</option>
-              <option value="font-tajawal">Tajawal (بسيط)</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-3 gap-2 pt-1 text-[11px]">
-            <div><span class="text-slate-400 block mb-0.5">الشفافية: <span id="wmOpacityVal" class="text-purple-300">100%</span></span><input type="range" min="15" max="100" value="100" oninput="updateWatermarkOpacity(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer"></div>
-            <div><span class="text-slate-400 block mb-0.5">الحجم: <span id="wmSizeVal" class="text-purple-300">11px</span></span><input type="range" min="8" max="18" value="11" oninput="updateWatermarkSize(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer"></div>
-            <div><span class="text-slate-400 block mb-0.5">اللون</span><select onchange="updateWatermarkColor(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-1 py-1 text-[11px] text-white"><option value="#ffffff">أبيض</option><option value="#fcd34d">ذهبي</option><option value="#cbd5e1">فضي</option></select></div>
+            <input type="text" id="wmPrefixInput" value="تصميم" oninput="updateWatermarkText(this.value, null)" placeholder="الكلمة العلوية" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
+            <input type="text" id="wmUserInput" value="@SAB3-77" oninput="updateWatermarkText(null, this.value)" placeholder="اليوزر" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
           </div>
         </div>
 
-        <!-- 3. الحكمة أو الدعاء (النص الأوسط) -->
+        <!-- 3. الحكمة والتحكم المرن (النص الأوسط) -->
         <div class="space-y-2 pt-3 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-quote-right text-amber-400"></i> الحكمة أو الدعاء
+              <i class="fa-solid fa-quote-right text-amber-400"></i> الحكمة أو النص
             </label>
             <button onclick="generateAiQuote()" class="text-amber-400 hover:text-amber-300 text-[11px] flex items-center gap-1">
               <i class="fa-solid fa-sparkles"></i> اقتراح حكمة
             </button>
           </div>
-          <select onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
-            <option value="font-amiri" selected>الخط الأميري (عثماني)</option>
-            <option value="font-cairo">خط كايرو (عصري)</option>
-            <option value="font-tajawal">خط تجوال (ناعم)</option>
-          </select>
-          <textarea id="quoteTextInput" rows="3" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."</textarea>
+          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."</textarea>
+          
+          <!-- أزرار تحكم مربع الحكمة (جديد) -->
+          <div class="bg-slate-900/40 p-2 rounded-xl border border-slate-800 space-y-2 mt-1">
+             <div>
+                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                   <span>رفع للأعلى ▲</span>
+                   <span>موقع الحكمة الرأسي</span>
+                   <span>تنزيل للأسفل ▼</span>
+                </div>
+                <input type="range" min="-120" max="120" value="0" step="5" oninput="adjustQuoteY(this.value)" class="w-full accent-amber-500 cursor-pointer h-1 bg-slate-700 rounded-lg">
+             </div>
+             <div>
+                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                   <span>تصغير ➖</span>
+                   <span>حجم مربع الحكمة</span>
+                   <span>تكبير ➕</span>
+                </div>
+                <input type="range" min="70" max="110" value="100" step="2" oninput="adjustQuoteScale(this.value)" class="w-full accent-amber-500 cursor-pointer h-1 bg-slate-700 rounded-lg">
+             </div>
+          </div>
         </div>
 
         <!-- 4. حدث في مثل هذا اليوم (القسم السفلي) -->
@@ -229,36 +232,39 @@
 
         <div id="storyCard" class="relative rounded-[36px] overflow-hidden flex flex-col justify-between p-3.5 bg-black select-none text-white shadow-inner">
           
-          <!-- الخلفية (فيديو أو صورة) -->
+          <!-- الخلفية -->
           <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0" playsinline webkit-playsinline loop autoplay crossorigin="anonymous"></video>
           <img id="cardImageBg" src="" class="absolute inset-0 w-full h-full object-cover z-0 hidden transition-opacity duration-500" crossorigin="anonymous">
           <div id="gradientOverlay" class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
 
-          <!-- ================= القسم العلوي (التاريخ يمين - الحقوق يسار) ================= -->
-          <div id="topSectionContainer" class="relative z-10 w-full flex justify-between items-start pt-4 px-2 flex-shrink-0 transition-transform duration-300">
+          <!-- ================= القسم العلوي (التاريخ يمين - الحقوق يسار - مرفوعين للأعلى) ================= -->
+          <div id="topSectionContainer" class="relative z-10 w-full flex justify-between items-start pt-1.5 px-1.5 flex-shrink-0 transition-transform duration-300">
             
-            <!-- الحقوق (اليسار) -->
-            <div id="watermarkBoxOverlay" class="top-overlay-bg rounded-xl px-2 py-1.5 transition-colors duration-300">
-              <span id="watermarkTextDisplay" class="font-cairo text-[11px] text-white tracking-wide select-none drop-shadow" dir="ltr">
-                تصميم: @SAB3-77
-              </span>
+            <!-- التاريخ (اليمين) - العنصر الأول في الـ DOM يذهب يميناً في RTL -->
+            <div id="dateBoxOverlay" class="top-overlay-bg rounded-2xl p-2.5 flex flex-col justify-center items-center text-center transition-colors duration-300 min-w-[110px] min-h-[64px]">
+               <span id="dayNameText" class="text-amber-400 font-cairo font-bold text-[13px] leading-none mb-1">الخميس</span>
+               <span id="hijriDateText" class="text-white font-cairo font-medium text-[11px] leading-tight">١٥ ربيع الأول ١٤٤٨ هـ</span>
+               <span id="gregorianDateText" class="text-slate-300 font-cairo text-[10px] leading-tight">١٥ أكتوبر ٢٠٢٦ م</span>
             </div>
 
-            <!-- التاريخ (اليمين) -->
-            <div id="dateBoxOverlay" class="top-overlay-bg rounded-xl p-2 flex flex-col items-end text-right transition-colors duration-300 min-w-[100px]">
-               <span id="dayNameText" class="text-amber-400 font-cairo font-bold text-[13px] leading-tight">الخميس</span>
-               <span id="hijriDateText" class="text-white font-cairo font-medium text-[11px] mt-0.5 leading-tight">١٥ ربيع الأول ١٤٤٨ هـ</span>
-               <span id="gregorianDateText" class="text-slate-300 font-cairo text-[10px] mt-0.5 leading-tight">١٥ أكتوبر ٢٠٢٦ م</span>
+            <!-- الحقوق (اليسار) - تم جعله مربعاً متطابقاً تماماً مع التاريخ -->
+            <div id="watermarkBoxOverlay" class="top-overlay-bg rounded-2xl p-2.5 flex flex-col justify-center items-center text-center transition-colors duration-300 min-w-[110px] min-h-[64px]">
+               <span id="wmPrefixDisplay" class="text-amber-400 font-cairo font-bold text-[13px] leading-none mb-1">تصميم</span>
+               <span id="wmUserDisplay" class="text-white font-cairo font-medium text-[11px] leading-tight" dir="ltr">@SAB3-77</span>
+               <span class="text-transparent text-[10px] leading-tight select-none">.</span> <!-- للحفاظ على التطابق بالحجم مع 3 أسطر التاريخ -->
             </div>
 
           </div>
 
-          <!-- مساحة الحكمة الوسطية -->
+          <!-- مساحة الحكمة الوسطية (مع التحكم) -->
           <div class="relative z-10 w-full flex-1 flex flex-col justify-center py-4 pointer-events-none">
-            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-4 max-h-[200px] overflow-y-auto no-scrollbar flex items-center justify-center text-center border border-white/10 pointer-events-auto mx-2">
-              <p id="quoteTextDisplay" class="font-amiri text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center transition-all duration-200 drop-shadow-md">
-                "التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."
-              </p>
+            <!-- حاوية الترانسفورم للحكمة -->
+            <div id="quoteTransformWrapper" class="transition-transform duration-200 w-full flex justify-center">
+                <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-4 max-h-[220px] overflow-y-auto no-scrollbar flex items-center justify-center text-center border border-white/10 pointer-events-auto mx-2 w-full">
+                  <p id="quoteTextDisplay" class="font-amiri text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center transition-all duration-200 drop-shadow-md">
+                    "التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."
+                  </p>
+                </div>
             </div>
           </div>
 
@@ -331,14 +337,16 @@
     let currentMediaType = 'video';
     let hasExtractedAudio = false;
 
-    // بنك الأحداث التاريخية للذكاء الاصطناعي
+    // متغيرات التحكم بالحكمة
+    let quoteOffsetY = 0;
+    let quoteScaleVal = 1;
+
     const historicalEvents = [
       "في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ.",
       "في مثل هذا اليوم عام 1964، حصل الزعيم مارتن لوثر كينغ على جائزة نوبل للسلام لجهوده في إنهاء التمييز العنصري.",
       "في مثل هذا اليوم عام 1815، بدأ نفي الإمبراطور الفرنسي نابليون بونابرت إلى جزيرة سانت هيلانة.",
       "في مثل هذا اليوم عام 1990، مُنح الرئيس السوفيتي ميخائيل غورباتشوف جائزة نوبل للسلام.",
-      "في مثل هذا اليوم عام 2003، أطلقت الصين أول رحلة فضائية مأهولة لها (شنتشو 5).",
-      "في مثل هذا اليوم، تتجدد فرصتك لكتابة تاريخك الخاص وصنع أثر إيجابي في حياتك وحياة من حولك. (رسالة اليوم)"
+      "في مثل هذا اليوم عام 2003، أطلقت الصين أول رحلة فضائية مأهولة لها (شنتشو 5)."
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -360,19 +368,12 @@
       document.getElementById('headerIcon').className = `fa-solid ${icon} text-lg`;
     }
 
-    // 🌟 التنسيق الجديد للتاريخ (اليوم، الهجري، الميلادي)
     function formatArabicDates() {
       const now = new Date();
-      
-      // جلب اسم اليوم
       const dayFormatter = new Intl.DateTimeFormat('ar-SA', { weekday: 'long' });
       document.getElementById('dayNameText').textContent = dayFormatter.format(now);
-
-      // الميلادي
       const gregFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
       document.getElementById('gregorianDateText').textContent = gregFormatter.format(now).replace('هـ', '').trim() + ' م';
-
-      // الهجري
       try {
         const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
         let hijriRaw = hijriFormatter.format(now).replace(/هـ/g, '').replace(/AH/g, '').trim();
@@ -382,19 +383,29 @@
       }
     }
 
-    // 🌟 التحكم ببروز وتعيم الخلفية العلوية
     function updateTopBgOpacity(val) {
       document.getElementById('topBgOpacityValue').textContent = `${val}%`;
       const alpha = val / 100;
       const elements = document.querySelectorAll('.top-overlay-bg');
-      elements.forEach(el => {
-        el.style.backgroundColor = `rgba(0, 0, 0, ${alpha})`;
-      });
+      elements.forEach(el => { el.style.backgroundColor = `rgba(0, 0, 0, ${alpha})`; });
     }
 
     function adjustDateOffset(val) {
       document.getElementById('dateOffsetValue').textContent = `${val}px`;
       document.getElementById('topSectionContainer').style.transform = `translateY(${val}px)`;
+    }
+
+    // 🌟 دوال التحكم بمربع الحكمة (جديد)
+    function applyQuoteTransform() {
+        document.getElementById('quoteTransformWrapper').style.transform = `translateY(${quoteOffsetY}px) scale(${quoteScaleVal})`;
+    }
+    function adjustQuoteY(val) {
+        quoteOffsetY = val;
+        applyQuoteTransform();
+    }
+    function adjustQuoteScale(val) {
+        quoteScaleVal = val / 100;
+        applyQuoteTransform();
     }
 
     function toggleElement(elementId, isVisible) {
@@ -403,10 +414,7 @@
       else el.classList.add('hidden');
     }
 
-    // 🌟 تحديث وتوليد الأحداث التاريخية
-    function updateHistoryText(text) {
-        document.getElementById('historyEventDisplay').textContent = text.trim() || 'لا توجد أحداث.';
-    }
+    function updateHistoryText(text) { document.getElementById('historyEventDisplay').textContent = text.trim() || 'لا توجد أحداث.'; }
     
     function generateHistoryEvent() {
       const randomEvent = historicalEvents[Math.floor(Math.random() * historicalEvents.length)];
@@ -414,28 +422,12 @@
       updateHistoryText(randomEvent);
     }
 
-    // الحقوق والحكمة
-    function updateWatermarkText(text) { document.getElementById('watermarkTextDisplay').textContent = text.trim() || ''; }
-    function updateWatermarkFont(fontClass) {
-      const wmEl = document.getElementById('watermarkTextDisplay');
-      wmEl.className = wmEl.className.replace(/font-\w+/g, '');
-      wmEl.classList.add(fontClass);
+    // 🌟 تحديث حقوق التصميم (كلمتين)
+    function updateWatermarkText(prefix, user) {
+        if(prefix !== null) document.getElementById('wmPrefixDisplay').textContent = prefix.trim() || 'تصميم';
+        if(user !== null) document.getElementById('wmUserDisplay').textContent = user.trim() || '';
     }
-    function updateWatermarkOpacity(val) {
-      document.getElementById('wmOpacityVal').textContent = `${val}%`;
-      document.getElementById('watermarkTextDisplay').style.opacity = val / 100;
-    }
-    function updateWatermarkSize(val) {
-      document.getElementById('wmSizeVal').textContent = `${val}px`;
-      document.getElementById('watermarkTextDisplay').style.fontSize = `${val}px`;
-    }
-    function updateWatermarkColor(colorHex) { document.getElementById('watermarkTextDisplay').style.color = colorHex; }
     
-    function updateQuoteFont(fontClass) {
-      const quoteEl = document.getElementById('quoteTextDisplay');
-      quoteEl.className = quoteEl.className.replace(/font-\w+/g, '');
-      quoteEl.classList.add(fontClass);
-    }
     function updateCardQuote(text) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       const t = text.trim() || '""';
@@ -445,6 +437,7 @@
       else if (t.length > 40) { quoteEl.style.fontSize = '1.05rem'; quoteEl.style.lineHeight = '1.65'; }
       else { quoteEl.style.fontSize = '1.15rem'; quoteEl.style.lineHeight = '1.75'; }
     }
+    
     function generateAiQuote() {
       const quotes = ["سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "الابتسامة كلمة طيبة بغير حروف."];
       const random = quotes[Math.floor(Math.random() * quotes.length)];
