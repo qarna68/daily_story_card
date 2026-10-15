@@ -44,9 +44,9 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* أسلوب Glassmorphism */
+    /* Glassmorphism فاخر */
     .glass-panel {
-      background: rgba(18, 24, 38, 0.72);
+      background: rgba(18, 24, 38, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -85,7 +85,7 @@
       </div>
       <div>
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">بطاقة اليوم الذكية</h1>
-        <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم اليومية للأجهزة الذكية</p>
+        <p class="text-xs text-slate-400">تصميم منساب مدمج بمواقيت الصلاة والطقس الحي</p>
       </div>
     </div>
     
@@ -109,7 +109,7 @@
           <span class="text-[11px] text-slate-400">تحديث لحظي</span>
         </div>
 
-        <!-- 1. إزاحة نصوص التاريخ رأسياً (مثبتة افتراضياً على -9px) -->
+        <!-- 1. إزاحة نصوص التاريخ رأسياً (مثبتة على -9px) -->
         <div class="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
           <div class="flex items-center justify-between text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
@@ -125,14 +125,14 @@
           </div>
         </div>
 
-        <!-- 2. اسم المدينة -->
+        <!-- 2. المدينة المعتمدة -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-location-dot text-rose-400"></i> اسم المدينة
+              <i class="fa-solid fa-location-dot text-rose-400"></i> المدينة (تظهر في شريط الصلوات)
             </label>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="cityToggle" checked onchange="toggleElement('cityContainer', this.checked)" class="sr-only peer">
+              <input type="checkbox" id="cityToggle" checked onchange="toggleCityBadge(this.checked)" class="sr-only peer">
               <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
             </label>
           </div>
@@ -156,14 +156,14 @@
           </div>
         </div>
 
-        <!-- 3. حالة الطقس -->
+        <!-- 3. حالة الطقس المدمجة (ليل / نهار) -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-cloud-sun text-amber-400"></i> حالة الطقس
+              <i class="fa-solid fa-cloud-sun text-amber-400"></i> الطقس الحي (شمس / قمر بحسب الوقت)
             </label>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="weatherToggle" checked onchange="toggleElement('weatherContainer', this.checked)" class="sr-only peer">
+              <input type="checkbox" id="weatherToggle" checked onchange="toggleElement('headerWeatherContainer', this.checked)" class="sr-only peer">
               <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
             </label>
           </div>
@@ -179,7 +179,7 @@
         <div class="space-y-1.5 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-mosque text-emerald-400"></i> مواقيت الصلاة
+              <i class="fa-solid fa-mosque text-emerald-400"></i> بطاقة مواقيت الصلاة
             </label>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" id="prayersToggle" checked onchange="toggleElement('prayerScheduleBox', this.checked)" class="sr-only peer">
@@ -257,7 +257,7 @@
             </select>
           </div>
 
-          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"</textarea>
+          <textarea id="quoteTextInput" rows="3" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ إِنَّ الَّذِينَ يَسْتَكْبِرُونَ عَنْ عِبَادَتِي سَيَدْخُلُونَ جَهَنَّمَ دَاخِرِينَ"</textarea>
         </div>
 
         <!-- 7. توليد صور الذكاء الاصطناعي اللحظية والرفع -->
@@ -269,9 +269,8 @@
             <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[10px]">AI Flux</span>
           </div>
 
-          <!-- وصف المشهد المراد توليده -->
           <div class="flex gap-1.5">
-            <input type="text" id="customAiPrompt" placeholder="صف المشهد (مثال: شروق هادئ، مطر وسحاب، جبال مكة...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+            <input type="text" id="customAiPrompt" placeholder="صف المشهد (شروق هادئ، مطر وسحاب، جبال مكة...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
             <button onclick="generateFreshAiImage()" id="generateAiBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition whitespace-nowrap shadow-md shadow-indigo-600/20">
               <i class="fa-solid fa-bolt"></i> <span>توليد الآن</span>
             </button>
@@ -346,93 +345,77 @@
             </div>
 
             <!-- مستطيل الحكمة مع مساحة مريحة للمقتبسات الطويلة -->
-            <div id="quoteCardBox" class="glass-panel rounded-2xl px-4 py-3 min-h-[75px] flex items-center justify-center text-center border border-white/10">
-              <p id="quoteTextDisplay" class="font-amiri text-lg md:text-xl text-amber-100 font-bold arabic-clean leading-snug m-0 p-0 text-center flex items-center justify-center transition-all duration-200">
-                "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"
+            <div id="quoteCardBox" class="glass-panel rounded-2xl px-4 py-3.5 min-h-[85px] flex items-center justify-center text-center border border-white/10">
+              <p id="quoteTextDisplay" class="font-amiri text-lg md:text-xl text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center flex items-center justify-center transition-all duration-200">
+                "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ إِنَّ الَّذِينَ يَسْتَكْبِرُونَ عَنْ عِبَادَتِي سَيَدْخُلُونَ جَهَنَّمَ دَاخِرِينَ"
               </p>
             </div>
 
           </div>
 
-          <!-- مساحة مرنة وسطية متسعة تترك الخلفية واضحة وتستوعب النصوص الطويلة -->
-          <div class="flex-grow min-h-[160px] pointer-events-none"></div>
+          <!-- مساحة مرنة وسطية رحبة وواسعة جداً تبرز جمالية الصورة المولدة بدون أي مربعات معترضة -->
+          <div class="flex-grow min-h-[190px] pointer-events-none"></div>
 
           <!-- ==============================
-               القسم السفلي: تم إنزال المدينة والطقس وضغط التوقيع للأسفل
+               القسم السفلي: حقوق التصميم + بطاقة الصلوات والطقس المدمجة
                ============================== -->
-          <div class="relative z-10 w-full space-y-1.5 pb-2">
+          <div class="relative z-10 w-full space-y-1 pb-2">
             
-            <!-- صف المدينة والطقس جنباً إلى جنب (مُنزل للأسفل بالقرب من المواقيت) -->
-            <div class="grid grid-cols-2 gap-2">
-              
-              <!-- بطاقة المدينة -->
-              <div id="cityContainer" class="glass-panel rounded-xl p-2.5 flex items-center justify-between border border-white/10">
-                <div class="text-right flex flex-col justify-center">
-                  <span class="text-[10px] text-slate-400 block font-cairo">المدينة</span>
-                  <span id="cityNameDisplay" class="text-xs font-bold text-white arabic-clean leading-tight mt-0.5">جدة</span>
-                </div>
-                <div class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 text-xs">
-                  <i class="fa-solid fa-location-dot"></i>
-                </div>
-              </div>
-
-              <!-- بطاقة الطقس -->
-              <div id="weatherContainer" class="glass-panel rounded-xl p-2.5 flex items-center justify-between border border-white/10">
-                <div class="text-right flex flex-col justify-center">
-                  <span id="weatherDescDisplay" class="text-[10px] text-slate-400 block font-cairo arabic-clean">صافٍ تماماً</span>
-                  <span id="tempDisplay" class="text-xs font-bold text-white arabic-clean leading-tight mt-0.5">28°C</span>
-                </div>
-                <div id="weatherIconBox" class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs">
-                  <i class="fa-solid fa-sun"></i>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- حقوق التصميم (مضغوطة رأسياً دون أخذ مساحة زائدة) -->
+            <!-- حقوق التصميم (مدمجة بخفة فوق الصندوق السفلي) -->
             <div id="watermarkBox" class="w-full flex items-center justify-center py-0.5 transition-all">
               <span id="watermarkTextDisplay" class="font-cinzel text-[11px] text-white opacity-50 tracking-wider uppercase select-none drop-shadow" dir="ltr">
                 @SAB3-77
               </span>
             </div>
 
-            <!-- بطاقة مواقيت الصلاة اليومية -->
-            <div id="prayerScheduleBox" class="glass-panel rounded-2xl p-3 border border-white/10 space-y-2">
+            <!-- بطاقة مواقيت الصلاة مع شريط الطقس والمدينة المدمج في الأعلى بدون مربعات منفصلة -->
+            <div id="prayerScheduleBox" class="glass-panel rounded-2xl p-3 border border-white/10 space-y-2.5">
               
-              <div class="flex items-center justify-between pb-1.5 border-b border-white/10 text-[11px]">
+              <!-- الشريط الرأسي العلوي الموحد (المدينة ومواقيت الصلاة يميناً + الطقس الحي نهاراً وليلاً يساراً) -->
+              <div class="flex items-center justify-between pb-2 border-b border-white/10 text-xs">
+                
+                <!-- اليمين: عنوان الصلوات مع اسم المدينة بجانبه مباشرة -->
                 <div class="flex items-center gap-1.5 font-bold text-white font-cairo">
                   <i class="fa-solid fa-mosque text-emerald-400 text-xs"></i>
-                  <span>مواقيت الصلاة اليوم</span>
+                  <span>مواقيت الصلاة</span>
+                  <span id="cityHeaderBadge" class="text-slate-300 font-normal text-[11px] flex items-center gap-1">
+                    • <i class="fa-solid fa-location-dot text-[10px] text-rose-400"></i> <b id="cityNameDisplay" class="text-white font-bold">جدة</b>
+                  </span>
                 </div>
-                <div id="nextPrayerBadge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-medium arabic-clean">
-                  القادمة: الظهر
+
+                <!-- اليسار: الطقس الحي بدون مربع (أيقونة متحركة شمس/قمر + الحالة + الحرارة) -->
+                <div id="headerWeatherContainer" class="flex items-center gap-1.5 text-[11px] text-amber-200 bg-white/5 py-0.5 px-2 rounded-full border border-white/10">
+                  <span id="weatherDynamicIcon" class="text-xs text-amber-400">☀️</span>
+                  <span id="weatherDescDisplay" class="text-slate-200 arabic-clean">صافٍ تماماً</span>
+                  <span id="tempDisplay" class="font-bold text-white">28°C</span>
                 </div>
+
               </div>
 
               <!-- جدول أوقات الصلوات الخمس بالتوسيط الدقيق -->
-              <div class="grid grid-cols-5 gap-1 text-center font-cairo">
+              <div class="grid grid-cols-5 gap-1.5 text-center font-cairo">
                 
-                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">الفجر</span>
                   <span id="timeFajr" class="text-[11px] font-bold text-amber-300 mt-0.5">05:03</span>
                 </div>
 
-                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">الظهر</span>
                   <span id="timeDhuhr" class="text-[11px] font-bold text-amber-300 mt-0.5">12:09</span>
                 </div>
 
-                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">العصر</span>
                   <span id="timeAsr" class="text-[11px] font-bold text-amber-300 mt-0.5">15:30</span>
                 </div>
 
-                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">المغرب</span>
                   <span id="timeMaghrib" class="text-[11px] font-bold text-amber-300 mt-0.5">17:59</span>
                 </div>
 
-                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">العشاء</span>
                   <span id="timeIsha" class="text-[11px] font-bold text-amber-300 mt-0.5">19:29</span>
                 </div>
@@ -467,9 +450,9 @@
         <p>استضافة التطبيق مجاناً عبر <strong>GitHub Pages</strong>:</p>
         
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-[11px] text-amber-300/90" dir="ltr">
-          <p class="text-slate-500"># رفع التحديث إلى المستودع</p>
+          <p class="text-slate-500"># تحديث الملف على المستودع</p>
           <p>git add index.html</p>
-          <p>git commit -m "تثبيت توسيط التاريخ وتوليد صور AI لحظياً"</p>
+          <p>git commit -m "دمج الطقس والمدينة وتفعيل شمس/قمر"</p>
           <p>git push origin main</p>
         </div>
 
@@ -514,7 +497,7 @@
     };
 
     const inspirationalQuotes = [
-      '"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"',
+      '"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ إِنَّ الَّذِينَ يَسْتَكْبِرُونَ عَنْ عِبَادَتِي سَيَدْخُلُونَ جَهَنَّمَ دَاخِرِينَ"',
       '"سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"',
       '"وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ"',
       '"إِنَّ مَعَ الْعُسْرِ يُسْرًا"',
@@ -524,7 +507,6 @@
       '"حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ"'
     ];
 
-    // قائمة مشاهد ذكاء اصطناعي متنوعة للتوليد التلقائي
     const aiScenicPrompts = [
       'serene golden sunrise over calm ocean, morning mist, cinematic lighting, 8k wallpaper, photorealistic',
       'magnificent green mountains with soft clouds at dawn, tranquil nature, cinematic vertical shot',
@@ -535,7 +517,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       formatArabicDates();
-      adjustDateOffset(-9); // تثبيت الإزاحة الافتراضية
+      adjustDateOffset(-9);
       fetchPrayers(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
       fetchWeather(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
     });
@@ -566,7 +548,7 @@
       }
     }
 
-    // إزاحة التاريخ رأسياً بالسلايدر
+    // إزاحة نصوص التاريخ
     function adjustDateOffset(val) {
       document.getElementById('dateOffsetValue').textContent = `${val}px`;
       const elements = document.querySelectorAll('.date-movable');
@@ -575,14 +557,14 @@
       });
     }
 
-    // تغيير الخط العربي للحكمة
+    // الخطوط العربية للحكمة
     function updateQuoteFont(fontClass) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       quoteEl.className = quoteEl.className.replace(/font-\w+/g, '');
-      quoteEl.classList.add(fontClass, 'text-lg', 'md:text-xl', 'text-amber-100', 'font-bold', 'arabic-clean', 'leading-snug', 'm-0', 'p-0', 'text-center', 'flex', 'items-center', 'justify-center', 'transition-all');
+      quoteEl.classList.add(fontClass, 'text-lg', 'md:text-xl', 'text-amber-100', 'font-bold', 'arabic-clean', 'leading-relaxed', 'm-0', 'p-0', 'text-center', 'flex', 'items-center', 'justify-center', 'transition-all');
     }
 
-    // خصائص حقوق التصميم
+    // حقوق التصميم
     function updateWatermarkText(text) {
       document.getElementById('watermarkTextDisplay').textContent = text.trim() || '';
     }
@@ -607,7 +589,13 @@
       document.getElementById('watermarkTextDisplay').style.color = colorHex;
     }
 
-    // 2. توليد صور الذكاء الاصطناعي الحية في نفس اللحظة (Pollinations AI Engine)
+    function toggleCityBadge(isVisible) {
+      const el = document.getElementById('cityHeaderBadge');
+      if (isVisible) el.classList.remove('hidden');
+      else el.classList.add('hidden');
+    }
+
+    // 2. توليد صور بالذكاء الاصطناعي (مع حجب العلامات المائية)
     async function generateFreshAiImage() {
       const btn = document.getElementById('generateAiBtn');
       const input = document.getElementById('customAiPrompt');
@@ -618,20 +606,16 @@
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد...</span>`;
       btn.disabled = true;
 
-      // تحديد نص المشهد (إذا أدخل المستخدم وصفاً أو توليد عشوائي)
       let promptText = input.value.trim();
       if (!promptText) {
         promptText = aiScenicPrompts[Math.floor(Math.random() * aiScenicPrompts.length)];
       }
 
-      // إضافة مواصفات جودة الصورة وأبعاد 9:16
-      const fullPrompt = encodeURIComponent(`${promptText}, cinematic vertical wallpaper, majestic lighting, ultra-high resolution, photorealistic, 8k, no text, no watermark`);
+      const fullPrompt = encodeURIComponent(`${promptText}, majestic cinematic lighting, 8k, photorealistic, vertical story wallpaper, clean frame, no watermark, no logo, no signature`);
       const randomSeed = Math.floor(Math.random() * 9999999);
       
-      // رابط التوليد المباشر بدقة 720x1280
       const aiImageUrl = `https://image.pollinations.ai/prompt/${fullPrompt}?width=720&height=1280&seed=${randomSeed}&nologo=true&model=flux`;
 
-      // تحميل الصورة وضمان جاهزيتها قبل التبديل
       const tempImg = new Image();
       tempImg.crossOrigin = "anonymous";
       tempImg.onload = () => {
@@ -645,7 +629,6 @@
         document.getElementById('mediaTypeBadge').textContent = 'صورة AI جديدة';
       };
       tempImg.onerror = () => {
-        // في حال بطء الشبكة يتم التبديل لصورة طبيعية بديلة
         imgEl.src = `https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1080&q=80&sig=${randomSeed}`;
         btn.innerHTML = originalBtnHTML;
         btn.disabled = false;
@@ -665,36 +648,13 @@
           document.getElementById('timeAsr').textContent = t.Asr.substring(0, 5);
           document.getElementById('timeMaghrib').textContent = t.Maghrib.substring(0, 5);
           document.getElementById('timeIsha').textContent = t.Isha.substring(0, 5);
-          calculateNextPrayer(t);
         }
       } catch (err) {
         console.warn('استخدام المواقيت المحلية');
       }
     }
 
-    function calculateNextPrayer(timings) {
-      const prayers = [
-        { name: 'الفجر', time: timings.Fajr },
-        { name: 'الظهر', time: timings.Dhuhr },
-        { name: 'العصر', time: timings.Asr },
-        { name: 'المغرب', time: timings.Maghrib },
-        { name: 'العشاء', time: timings.Isha }
-      ];
-
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-      for (let p of prayers) {
-        const [h, m] = p.time.split(':').map(Number);
-        if (h * 60 + m > currentMinutes) {
-          document.getElementById('nextPrayerBadge').textContent = `القادمة: ${p.name}`;
-          return;
-        }
-      }
-      document.getElementById('nextPrayerBadge').textContent = `القادمة: الفجر`;
-    }
-
-    // 4. جلب حالة الطقس
+    // 4. جلب حالة الطقس وتحديد (شمس / قمر) بحسب الوقت الفعلي
     async function fetchWeather(lat, lng) {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
@@ -702,25 +662,56 @@
         if (data && data.current_weather) {
           const temp = Math.round(data.current_weather.temperature);
           const code = data.current_weather.weathercode;
-          const status = getWeatherArabic(code);
+          const isDay = data.current_weather.is_day === 1; // 1 نهار، 0 ليل
+
+          const status = getWeatherVisuals(code, isDay);
           
           document.getElementById('tempDisplay').textContent = `${temp}°C`;
           document.getElementById('weatherDescDisplay').textContent = status.text;
-          document.getElementById('weatherStatusText').textContent = `${status.text} (${temp}°C)`;
-          document.getElementById('weatherIconBox').innerHTML = `<i class="${status.icon}"></i>`;
+          document.getElementById('weatherDynamicIcon').innerHTML = status.icon;
+          document.getElementById('weatherStatusText').textContent = `${status.text} (${temp}°C) - ${isDay ? 'نهار' : 'ليل'}`;
         }
       } catch (err) {
         console.warn('تعذر جلب الطقس المباشر');
       }
     }
 
-    function getWeatherArabic(code) {
-      if (code === 0) return { text: 'صافٍ تماماً', icon: 'fa-solid fa-sun' };
-      if (code >= 1 && code <= 3) return { text: 'غائم جزئياً', icon: 'fa-solid fa-cloud-sun' };
-      if (code >= 45 && code <= 48) return { text: 'ضبابي لطيف', icon: 'fa-solid fa-smog' };
-      if (code >= 51 && code <= 67) return { text: 'أمطار خفيفة', icon: 'fa-solid fa-cloud-rain text-blue-400' };
-      if (code >= 80 && code <= 82) return { text: 'أمطار غزيرة', icon: 'fa-solid fa-cloud-showers-heavy text-blue-400' };
-      return { text: 'معتدل ولطيف', icon: 'fa-solid fa-cloud-sun' };
+    // نظام الأيقونات المزدوج لليل والنهار
+    function getWeatherVisuals(code, isDay) {
+      if (code === 0) {
+        return {
+          text: 'صافٍ تماماً',
+          icon: isDay ? '<i class="fa-solid fa-sun text-amber-400"></i>' : '<i class="fa-solid fa-moon text-indigo-300"></i>'
+        };
+      }
+      if (code >= 1 && code <= 3) {
+        return {
+          text: 'غائم جزئياً',
+          icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>'
+        };
+      }
+      if (code >= 45 && code <= 48) {
+        return {
+          text: 'ضبابي لطيف',
+          icon: '<i class="fa-solid fa-smog text-slate-300"></i>'
+        };
+      }
+      if (code >= 51 && code <= 67) {
+        return {
+          text: 'أمطار خفيفة',
+          icon: '<i class="fa-solid fa-cloud-rain text-blue-400"></i>'
+        };
+      }
+      if (code >= 80 && code <= 82) {
+        return {
+          text: 'أمطار غزيرة',
+          icon: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>'
+        };
+      }
+      return {
+        text: 'معتدل ولطيف',
+        icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>'
+      };
     }
 
     function onCityChanged(cityName) {
@@ -761,11 +752,8 @@
 
     function toggleElement(elementId, isVisible) {
       const el = document.getElementById(elementId);
-      if (isVisible) {
-        el.classList.remove('hidden');
-      } else {
-        el.classList.add('hidden');
-      }
+      if (isVisible) el.classList.remove('hidden');
+      else el.classList.add('hidden');
     }
 
     function updateCardQuote(text) {
