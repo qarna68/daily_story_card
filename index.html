@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>بطاقة اليوم الذكية</title>
   
-  <!-- خطوط عربية متناسقة -->
+  <!-- مكتبة الخطوط العربية والإنجليزية للحقوق -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Aref+Ruqaa:wght@700&family=Cairo:wght@600;700;800&family=Noto+Naskh+Arabic:wght@600;700&family=Reem+Kufi:wght@600;700&family=Tajawal:wght@400;500;700&family=Cinzel:wght@600;700&family=Great+Vibes&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   
-  <!-- مكتبات التصيير والأيقونات -->
+  <!-- Tailwind CSS & Icons & HTML2Canvas -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,21 +22,20 @@
       background-color: #0b0f19;
       color: #f1f5f9;
     }
-    .font-quran {
-      font-family: 'Amiri', serif;
-    }
-    .font-cairo {
-      font-family: 'Cairo', sans-serif;
-    }
+    
+    /* أصناف الخطوط العربية */
+    .font-amiri { font-family: 'Amiri', serif; }
+    .font-ruqaa { font-family: 'Aref Ruqaa', serif; }
+    .font-kufi { font-family: 'Reem Kufi', sans-serif; }
+    .font-naskh { font-family: 'Noto Naskh Arabic', serif; }
+    .font-cairo { font-family: 'Cairo', sans-serif; }
+    .font-tajawal { font-family: 'Tajawal', sans-serif; }
 
-    /* إصلاح التوسيط العمودي الصارم للنصوص العربية */
-    .center-arabic {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      padding-top: 1px; /* موازنة الـ baseline */
-    }
+    /* أصناف الخطوط الإنجليزية للحقوق */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+    .font-poppins { font-family: 'Poppins', sans-serif; }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .font-signature { font-family: 'Great Vibes', cursive; }
 
     .arabic-clean {
       letter-spacing: normal !important;
@@ -45,7 +44,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* أسلوب Glassmorphism */
+    /* Glassmorphism */
     .glass-panel {
       background: rgba(18, 24, 38, 0.72);
       backdrop-filter: blur(20px);
@@ -61,7 +60,6 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* مقاس البطاقة 9:16 */
     #storyCard {
       aspect-ratio: 9 / 16;
       width: 100%;
@@ -79,7 +77,7 @@
 </head>
 <body class="min-h-screen p-3 md:p-6 flex flex-col items-center">
 
-  <!-- شريط العنوان -->
+  <!-- شريط العنوان العلوي -->
   <header class="w-full max-w-4xl flex items-center justify-between pb-5 border-b border-slate-800 mb-6">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
@@ -102,12 +100,29 @@
     
     <!-- قسم الإعدادات والخيارات -->
     <div class="lg:col-span-6 space-y-4">
-      <div class="glass-panel rounded-2xl p-5 space-y-5">
+      <div class="glass-panel rounded-2xl p-5 space-y-4">
+        
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">
             <i class="fa-solid fa-sliders"></i> خيارات وإعدادات البطاقة
           </h2>
-          <span class="text-[11px] text-slate-400">تحديث فوري للمعاينة</span>
+          <span class="text-[11px] text-slate-400">تحديث لحظي</span>
+        </div>
+
+        <!-- تحريك التاريخ رأسياً (سلايدر الإزاحة) -->
+        <div class="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-arrows-up-down text-amber-400 text-[11px]"></i> إزاحة نصوص التاريخ رأسياً
+            </span>
+            <span id="dateOffsetValue" class="text-amber-400 font-mono text-[11px]">-3px</span>
+          </div>
+          <input type="range" id="dateOffsetSlider" min="-12" max="12" value="-3" step="1" oninput="adjustDateOffset(this.value)" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>رفع للأعلى ▲</span>
+            <span>افتراضي</span>
+            <span>تنزيل للأسفل ▼</span>
+          </div>
         </div>
 
         <!-- 1. اسم المدينة -->
@@ -152,7 +167,7 @@
               <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
             </label>
           </div>
-          <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+          <div class="flex items-center justify-between bg-slate-900/60 p-2 rounded-xl border border-slate-800 text-xs">
             <span id="weatherStatusText" class="text-slate-300">صافٍ تماماً (28°C)</span>
             <button onclick="refreshWeatherData()" class="text-slate-400 hover:text-amber-400 transition flex items-center gap-1">
               <i class="fa-solid fa-rotate text-[11px]"></i> تحديث
@@ -161,7 +176,7 @@
         </div>
 
         <!-- 3. مواقيت الصلاة -->
-        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+        <div class="space-y-1.5 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
               <i class="fa-solid fa-mosque text-emerald-400"></i> مواقيت الصلاة
@@ -173,32 +188,58 @@
           </div>
         </div>
 
-        <!-- 4. خلفية البطاقة (صورة أو فيديو) -->
-        <div class="space-y-2.5 pt-2 border-t border-slate-800/80">
+        <!-- 4. حقوق التصميم (جديد ومفصّل) -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80 bg-slate-900/40 p-3 rounded-xl border border-slate-800">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-photo-film text-indigo-400"></i> اختيار الخلفية
+              <i class="fa-solid fa-signature text-purple-400"></i> حقوق التصميم (وسط الصفحة)
             </label>
-            <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[11px]">صورة</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="watermarkToggle" checked onchange="toggleElement('watermarkBox', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
           </div>
 
+          <!-- مربع نص الحقوق والخط الإنجليزي -->
           <div class="grid grid-cols-2 gap-2">
-            <label class="cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 p-3 rounded-xl flex flex-col items-center justify-center text-center transition group">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-lg mb-1 group-hover:scale-110 transition"></i>
-              <span class="text-xs font-medium text-slate-200">اختر من ألبوم الصور</span>
-              <span class="text-[10px] text-slate-400">صورة أو فيديو</span>
-              <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
-            </label>
+            <input type="text" id="watermarkTextInput" value="@DESIGN" oninput="updateWatermarkText(this.value)" placeholder="نص الحقوق" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
+            
+            <select id="watermarkFontSelect" onchange="updateWatermarkFont(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
+              <option value="font-signature">Great Vibes (توقيع)</option>
+              <option value="font-montserrat" selected>Montserrat (عصري)</option>
+              <option value="font-cinzel">Cinzel (كلاسيكي)</option>
+              <option value="font-poppins">Poppins (بسيط)</option>
+            </select>
+          </div>
 
-            <button onclick="generateAiVisualTheme()" class="bg-slate-900 border border-slate-700 hover:border-indigo-500/60 p-3 rounded-xl flex flex-col items-center justify-center text-center transition group">
-              <i class="fa-solid fa-wand-magic-sparkles text-indigo-400 text-lg mb-1 group-hover:scale-110 transition"></i>
-              <span class="text-xs font-medium text-slate-200">توليد بالذكاء الاصطناعي</span>
-              <span class="text-[10px] text-slate-400">مناظر طبيعية وسينمائية</span>
-            </button>
+          <!-- الحجم والشفافية واللون -->
+          <div class="grid grid-cols-3 gap-2 pt-1 text-[11px]">
+            <!-- الشفافية -->
+            <div>
+              <span class="text-slate-400 block mb-0.5">الشفافية: <span id="wmOpacityVal" class="text-purple-300">50%</span></span>
+              <input type="range" min="15" max="100" value="50" oninput="updateWatermarkOpacity(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer">
+            </div>
+
+            <!-- الحجم -->
+            <div>
+              <span class="text-slate-400 block mb-0.5">الحجم: <span id="wmSizeVal" class="text-purple-300">11px</span></span>
+              <input type="range" min="8" max="18" value="11" oninput="updateWatermarkSize(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer">
+            </div>
+
+            <!-- اللون -->
+            <div>
+              <span class="text-slate-400 block mb-0.5">اللون</span>
+              <select onchange="updateWatermarkColor(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-1 py-1 text-[11px] text-white">
+                <option value="#ffffff">أبيض</option>
+                <option value="#fcd34d">ذهبي</option>
+                <option value="#cbd5e1">فضي</option>
+                <option value="#f472b6">وردي</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <!-- 5. مربع الحكمة / النصيحة -->
+        <!-- 5. الحكمة والخطوط العربية المتنوعة -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
@@ -208,7 +249,46 @@
               <i class="fa-solid fa-sparkles"></i> اقتراح حكمة
             </button>
           </div>
-          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"</textarea>
+
+          <!-- اختيار الخط العربي -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 whitespace-nowrap">الخط العربي:</span>
+            <select id="quoteFontSelect" onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+              <option value="font-amiri" selected>الخط الأميري (عثماني / مصحف)</option>
+              <option value="font-ruqaa">خط الرقعة (عارف رقعة)</option>
+              <option value="font-kufi">الخط الكوفي (ريم كوفي)</option>
+              <option value="font-naskh">خط النسخ (نوستالجيا)</option>
+              <option value="font-cairo">خط كايرو (عصري جريء)</option>
+              <option value="font-tajawal">خط تجوال (ناعم ومتناسق)</option>
+            </select>
+          </div>
+
+          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"</textarea>
+        </div>
+
+        <!-- 6. خلفية البطاقة -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-photo-film text-indigo-400"></i> اختيار الخلفية
+            </label>
+            <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[11px]">صورة</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <label class="cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 p-2.5 rounded-xl flex flex-col items-center justify-center text-center transition group">
+              <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-base mb-1 group-hover:scale-110 transition"></i>
+              <span class="text-xs font-medium text-slate-200">اختر من جهازك</span>
+              <span class="text-[10px] text-slate-400">صورة أو فيديو</span>
+              <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
+            </label>
+
+            <button onclick="generateAiVisualTheme()" class="bg-slate-900 border border-slate-700 hover:border-indigo-500/60 p-2.5 rounded-xl flex flex-col items-center justify-center text-center transition group">
+              <i class="fa-solid fa-wand-magic-sparkles text-indigo-400 text-base mb-1 group-hover:scale-110 transition"></i>
+              <span class="text-xs font-medium text-slate-200">تبديل الخلفية</span>
+              <span class="text-[10px] text-slate-400">مناظر طبيعية وسينمائية</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -239,55 +319,55 @@
           <!-- عنصر الصورة الحي -->
           <img id="cardImageBg" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1080&q=80" class="absolute inset-0 w-full h-full object-cover z-0" crossorigin="anonymous" alt="خلفية البطاقة">
 
-          <!-- عنصر الفيديو الحي (مخفي لحين تشغيله لاحقاً) -->
+          <!-- عنصر الفيديو الحي (محتفظ به لاستكماله لاحقاً) -->
           <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0 hidden" playsinline webkit-playsinline muted loop autoplay crossorigin="anonymous"></video>
 
           <!-- تدرج إضاءة سينمائي ناعم -->
           <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
 
           <!-- ==============================
-               القسم العلوي: التاريخ والحكمة (مع التوسيط الصارم)
+               القسم العلوي: التاريخ والحكمة
                ============================== -->
           <div class="relative z-10 w-full space-y-2.5 pt-4">
             
-            <!-- مستطيل التاريخ الهجري والميلادي بتوسيط عمودي وأفقي هندسي دقيق -->
-            <div id="dateBar" class="glass-pill rounded-full px-3 py-0 h-9 grid grid-cols-12 items-center text-[11px] font-medium text-amber-300">
+            <!-- مستطيل التاريخ مع الإزاحة الرأسية المرنة المربوطة بالسلايدر -->
+            <div id="dateBar" class="glass-pill rounded-full px-3 h-9 grid grid-cols-12 items-center text-[11px] font-medium text-amber-300 overflow-hidden">
               
               <!-- اليمين: التاريخ الهجري -->
               <div class="col-span-5 flex items-center justify-start h-full">
-                <span id="hijriDateText" class="arabic-clean leading-none">٤ جمادى الأولى، ١٤٤٨ هـ</span>
+                <span id="hijriDateText" class="date-movable arabic-clean leading-none transform -translate-y-[3px]">٤ جمادى الأولى، ١٤٤٨ هـ</span>
               </div>
               
               <!-- المنتصف: النجمة الذهبية -->
               <div class="col-span-2 flex items-center justify-center h-full">
-                <span class="text-amber-400 text-xs leading-none">✦</span>
+                <span class="date-movable text-amber-400 text-xs leading-none transform -translate-y-[3px]">✦</span>
               </div>
 
               <!-- اليسار: التاريخ الميلادي -->
               <div class="col-span-5 flex items-center justify-end h-full">
-                <span id="gregorianDateText" class="arabic-clean leading-none">١٥ أكتوبر، ٢٠٢٦ م</span>
+                <span id="gregorianDateText" class="date-movable arabic-clean leading-none transform -translate-y-[3px]">١٥ أكتوبر، ٢٠٢٦ م</span>
               </div>
 
             </div>
 
-            <!-- مستطيل الحكمة بتوسيط رأسي وأفقي متقن في قلب المربع -->
+            <!-- مستطيل الحكمة بالخط العربي المختار -->
             <div id="quoteCardBox" class="glass-panel rounded-2xl px-4 py-3 min-h-[75px] flex items-center justify-center text-center border border-white/10">
-              <p id="quoteTextDisplay" class="font-quran text-lg md:text-xl text-amber-100 font-bold arabic-clean leading-snug m-0 p-0 text-center flex items-center justify-center">
-                "سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"
+              <p id="quoteTextDisplay" class="font-amiri text-lg md:text-xl text-amber-100 font-bold arabic-clean leading-snug m-0 p-0 text-center flex items-center justify-center transition-all duration-200">
+                "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"
               </p>
             </div>
 
           </div>
 
           <!-- مساحة مرنة وسطية تترك العنصر البصري واضحاً تماماً -->
-          <div class="flex-grow min-h-[140px] pointer-events-none"></div>
+          <div class="flex-grow min-h-[120px] pointer-events-none"></div>
 
           <!-- ==============================
-               القسم السفلي: المدينة، الطقس، والمواقيت
+               القسم السفلي: المدينة والطقس، حقوق التصميم، ومواقيت الصلاة
                ============================== -->
-          <div class="relative z-10 w-full space-y-2.5 pb-2">
+          <div class="relative z-10 w-full space-y-2 pb-2">
             
-            <!-- صف المدينة والطقس جنباً إلى جنب بتوسيط متوازن -->
+            <!-- صف المدينة والطقس جنباً إلى جنب -->
             <div class="grid grid-cols-2 gap-2">
               
               <!-- بطاقة المدينة -->
@@ -312,6 +392,13 @@
                 </div>
               </div>
 
+            </div>
+
+            <!-- حقوق التصميم (تحت المدينة والطقس وفوق الصلوات في منتصف الصفحة تماماً) -->
+            <div id="watermarkBox" class="w-full flex items-center justify-center py-0.5 transition-all">
+              <span id="watermarkTextDisplay" class="font-montserrat text-[11px] text-white opacity-50 tracking-wider uppercase select-none drop-shadow" dir="ltr">
+                @DESIGN
+              </span>
             </div>
 
             <!-- بطاقة مواقيت الصلاة اليومية -->
@@ -388,7 +475,7 @@
           <p class="text-slate-500"># رفع الملف إلى المستودع</p>
           <p>git init</p>
           <p>git add index.html</p>
-          <p>git commit -m "إطلاق بطاقة اليوم الذكية"</p>
+          <p>git commit -m "تحديث التوسيط والحقوق والخطوط"</p>
           <p>git branch -M main</p>
           <p>git remote add origin https://github.com/USERNAME/REPO_NAME.git</p>
           <p>git push -u origin main</p>
@@ -436,6 +523,7 @@
     };
 
     const inspirationalQuotes = [
+      '"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"',
       '"سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"',
       '"وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ"',
       '"إِنَّ مَعَ الْعُسْرِ يُسْرًا"',
@@ -483,6 +571,47 @@
       }
     }
 
+    // إزاحة التاريخ رأسياً بالسلايدر
+    function adjustDateOffset(val) {
+      document.getElementById('dateOffsetValue').textContent = `${val}px`;
+      const elements = document.querySelectorAll('.date-movable');
+      elements.forEach(el => {
+        el.style.transform = `translateY(${val}px)`;
+      });
+    }
+
+    // تغيير الخط العربي للحكمة
+    function updateQuoteFont(fontClass) {
+      const quoteEl = document.getElementById('quoteTextDisplay');
+      quoteEl.className = quoteEl.className.replace(/font-\w+/g, '');
+      quoteEl.classList.add(fontClass, 'text-lg', 'md:text-xl', 'text-amber-100', 'font-bold', 'arabic-clean', 'leading-snug', 'm-0', 'p-0', 'text-center', 'flex', 'items-center', 'justify-center', 'transition-all');
+    }
+
+    // خصائص حقوق التصميم
+    function updateWatermarkText(text) {
+      document.getElementById('watermarkTextDisplay').textContent = text.trim() || '';
+    }
+
+    function updateWatermarkFont(fontClass) {
+      const wmEl = document.getElementById('watermarkTextDisplay');
+      wmEl.classList.remove('font-montserrat', 'font-poppins', 'font-cinzel', 'font-signature');
+      wmEl.classList.add(fontClass);
+    }
+
+    function updateWatermarkOpacity(val) {
+      document.getElementById('wmOpacityVal').textContent = `${val}%`;
+      document.getElementById('watermarkTextDisplay').style.opacity = val / 100;
+    }
+
+    function updateWatermarkSize(val) {
+      document.getElementById('wmSizeVal').textContent = `${val}px`;
+      document.getElementById('watermarkTextDisplay').style.fontSize = `${val}px`;
+    }
+
+    function updateWatermarkColor(colorHex) {
+      document.getElementById('watermarkTextDisplay').style.color = colorHex;
+    }
+
     // 2. جلب مواقيت الصلاة
     async function fetchPrayers(lat, lng) {
       try {
@@ -498,7 +627,7 @@
           calculateNextPrayer(t);
         }
       } catch (err) {
-        console.warn('استخدام المواقيت المحلية المحفوظة');
+        console.warn('استخدام المواقيت المحلية');
       }
     }
 
@@ -563,7 +692,6 @@
       fetchWeather(coords.lat, coords.lng);
     }
 
-    // تحديد الموقع الصامت عبر IP
     async function detectLocationSilent() {
       const btn = document.getElementById('locateBtn');
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
@@ -609,7 +737,6 @@
       updateCardQuote(random);
     }
 
-    // رفع الوسائط
     function handleUserMediaUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -637,7 +764,6 @@
       }
     }
 
-    // توليد خلفية
     let themeIdx = 0;
     function generateAiVisualTheme() {
       themeIdx = (themeIdx + 1) % aiVisualThemes.length;
@@ -649,7 +775,7 @@
       document.getElementById('mediaTypeBadge').textContent = 'صورة';
     }
 
-    // الحفظ المباشر للآيفون بصيغة صورة فائقة الوضوح
+    // حفظ البطاقة في ألبوم صور الآيفون بدقة عالية
     async function saveCardDirectly() {
       const card = document.getElementById('storyCard');
       const btn = document.getElementById('saveMainBtn');
