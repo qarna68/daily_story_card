@@ -73,33 +73,52 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* 🔥 إضافات إبداعية: تأثيرات حركية (Animations) */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    /* تأخير الظهور للعناصر */
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    
+    /* انتقال ناعم لظل البطاقة */
+    #phoneContainer {
+      transition: box-shadow 0.8s ease-in-out;
+    }
   </style>
 </head>
 <body class="min-h-screen p-3 md:p-6 flex flex-col items-center">
 
-  <!-- شريط العنوان العلوي -->
-  <header class="w-full max-w-4xl flex items-center justify-between pb-5 border-b border-slate-800 mb-6">
+  <!-- شريط العنوان العلوي (تحديث: التحية الديناميكية) -->
+  <header class="w-full max-w-4xl flex items-center justify-between pb-5 border-b border-slate-800 mb-6 animate-fade-up">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-        <i class="fa-solid fa-moon text-lg"></i>
+      <div id="headerIconContainer" class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <i id="headerIcon" class="fa-solid fa-sun text-lg"></i>
       </div>
       <div>
-        <h1 class="text-lg md:text-xl font-bold font-cairo text-white">بطاقة اليوم الذكية</h1>
+        <h1 class="text-lg md:text-xl font-bold font-cairo text-white">
+          بطاقة اليوم <span id="dynamicGreeting" class="text-amber-400 text-sm font-normal"></span>
+        </h1>
         <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم اليومية مع دمج الصوت والموسيقى</p>
       </div>
     </div>
     
     <button onclick="toggleGithubModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 flex items-center gap-1.5 transition">
       <i class="fa-brands fa-github text-sm"></i>
-      <span>ربط GitHub</span>
+      <span class="hidden sm:inline">ربط GitHub</span>
     </button>
   </header>
 
   <!-- الحاوية الرئيسية -->
   <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     
-    <!-- قسم الإعدادات والخيارات -->
-    <div class="lg:col-span-6 space-y-4">
+    <!-- قسم الإعدادات والخيارات (تحديث: أنيميشن دخول) -->
+    <div class="lg:col-span-6 space-y-4 animate-fade-up delay-1">
       <div class="glass-panel rounded-2xl p-5 space-y-4">
         
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -311,16 +330,16 @@
 
     </div>
 
-    <!-- قسم المعاينة المباشرة (بطاقة الآيفون 9:16) -->
-    <div class="lg:col-span-6 flex flex-col items-center">
+    <!-- قسم المعاينة المباشرة (تحديث: أنيميشن دخول وتفاعل ظل البطاقة مع الطقس) -->
+    <div class="lg:col-span-6 flex flex-col items-center animate-fade-up delay-2">
       
       <!-- إطار الهاتف الخارجي -->
-      <div class="relative w-full max-w-[340px] md:max-w-[370px] rounded-[44px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl">
+      <div id="phoneContainer" class="relative w-full max-w-[340px] md:max-w-[370px] rounded-[44px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl">
         
         <!-- الجزيرة التفاعلية -->
         <div class="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-30 pointer-events-none"></div>
 
-        <!-- الحاوية الأساسية للبطاقة (تثبيت علوي وسفلي لمنع انزلاق الصلوات نهائياً) -->
+        <!-- الحاوية الأساسية للبطاقة -->
         <div id="storyCard" class="relative rounded-[36px] overflow-hidden flex flex-col justify-between p-3.5 bg-black select-none text-white shadow-inner">
           
           <!-- عنصر الفيديو الحي للخلفية -->
@@ -332,12 +351,9 @@
           <!-- تدرج إضاءة سينمائي ناعم -->
           <div id="gradientOverlay" class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
 
-          <!-- ==============================
-               القسم العلوي: التاريخ والحكمة (مثبت ضد الانضغاط flex-shrink-0)
-               ============================== -->
+          <!-- القسم العلوي: التاريخ والحكمة -->
           <div class="relative z-10 w-full space-y-2 pt-2 flex-shrink-0">
             
-            <!-- مستطيل التاريخ الهجري والميلادي بتوسيط -9px -->
             <div id="dateBar" class="glass-pill rounded-full px-3 h-8 grid grid-cols-12 items-center text-[11px] font-medium text-amber-300 overflow-hidden">
               <div class="col-span-5 flex items-center justify-start h-full">
                 <span id="hijriDateText" class="date-movable arabic-clean leading-none transform -translate-y-[9px]">٤ جمادى الأولى، ١٤٤٨ هـ</span>
@@ -350,8 +366,8 @@
               </div>
             </div>
 
-            <!-- مستطيل الحكمة مع تحجيم الخط التلقائي -->
-            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-2.5 max-h-[170px] overflow-hidden flex items-center justify-center text-center border border-white/10">
+            <!-- تحديث: إضافة overflow-y-auto للتمرير إذا كان النص طويلاً -->
+            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-2.5 max-h-[170px] overflow-y-auto no-scrollbar flex items-center justify-center text-center border border-white/10">
               <p id="quoteTextDisplay" class="font-amiri text-xs md:text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center flex items-center justify-center transition-all duration-200">
                 "اسأل الله سبحانه وتعالى الحي القيوم ان يغفر ذنبك ويشرح صدرك ويجلي همك وينور دربك ويرزقك السكينة والظمأنينة ويجنبك الفسوق والرذيلة ويجعل لك الافراح سليلة ويعطيك من الخير حتى يرضيك .."
               </p>
@@ -359,22 +375,17 @@
 
           </div>
 
-          <!-- مساحة مرنة وسطية تترك المشهد واضحاً وتتقلص بذكاء عند طول النص -->
           <div class="flex-1 min-h-0 pointer-events-none"></div>
 
-          <!-- ==============================
-               القسم السفلي: حقوق التصميم + بطاقة الصلوات والطقس (مثبتة 100% flex-shrink-0)
-               ============================== -->
+          <!-- القسم السفلي: حقوق التصميم + بطاقة الصلوات والطقس -->
           <div class="relative z-10 w-full space-y-1 pb-1 flex-shrink-0">
             
-            <!-- حقوق التصميم -->
             <div id="watermarkBox" class="w-full flex items-center justify-center py-0.5 transition-all">
               <span id="watermarkTextDisplay" class="font-cinzel text-[11px] text-white opacity-50 tracking-wider uppercase select-none drop-shadow" dir="ltr">
                 @SAB3-77
               </span>
             </div>
 
-            <!-- بطاقة مواقيت الصلاة والطقس المدمج (كاملة ومستقرة في مكانها) -->
             <div id="prayerScheduleBox" class="glass-panel rounded-2xl p-2.5 border border-white/10 space-y-2 flex-shrink-0">
               
               <div class="flex items-center justify-between pb-1.5 border-b border-white/10 text-xs">
@@ -393,7 +404,6 @@
                 </div>
               </div>
 
-              <!-- جدول أوقات الصلوات الخمس كاملاً -->
               <div class="grid grid-cols-5 gap-1 text-center font-cairo">
                 <div class="bg-white/5 rounded-xl py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
                   <span class="text-[10px] text-slate-300">الفجر</span>
@@ -433,14 +443,14 @@
   <div id="videoProgressBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 border border-slate-700 shadow-2xl rounded-2xl p-4 w-[90%] max-w-sm hidden flex flex-col items-center text-center backdrop-blur-md">
     <div class="flex items-center gap-2 mb-2">
       <i class="fa-solid fa-circle-notch fa-spin text-amber-400 text-sm"></i>
-      <span class="text-xs font-bold text-white font-cairo">🎬 جاري تسجيل الفيديو وصوت الموسيقى...</span>
+      <span class="text-xs font-bold text-white font-cairo">🎬 جاري تجهيز البطاقة...</span>
     </div>
     
     <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
       <div id="videoProgressBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-0 transition-all duration-150"></div>
     </div>
     <div class="flex justify-between w-full mt-1.5 text-[11px] text-slate-400 font-mono">
-      <span id="videoStatus">دمج الصوت والحركة...</span>
+      <span id="videoStatus">دمج الطبقات...</span>
       <span id="videoPercent" class="text-amber-400 font-bold">0%</span>
     </div>
   </div>
@@ -450,35 +460,32 @@
     <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-800">
         <h3 class="text-sm font-bold text-white font-cairo flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check text-emerald-400"></i> الفيديو والصوت جاهزان
+          <i class="fa-solid fa-circle-check text-emerald-400"></i> البطاقة جاهزة!
         </h3>
         <span id="formatBadge" class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full font-bold">MP4</span>
       </div>
 
       <!-- مشغل معاينة الفيديو الناتج بالصوت -->
-      <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-64 mx-auto border border-white/10 shadow-lg">
-        <video id="resultVideoPlayer" class="w-full h-full object-cover" controls playsinline loop></video>
+      <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-64 mx-auto border border-white/10 shadow-lg relative">
+         <video id="resultVideoPlayer" class="w-full h-full object-cover hidden" controls playsinline loop></video>
+         <img id="resultImagePreview" class="w-full h-full object-cover hidden" />
       </div>
 
       <!-- أزرار الإجراءات -->
       <div class="space-y-2 pt-1">
-        <button type="button" id="shareVideoBtn" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl text-xs font-cairo shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-share-nodes"></i> فتح نافذة الحفظ بالآيفون (Photos)
+        <button type="button" id="shareVideoBtn" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl text-xs font-cairo shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-95">
+          <i class="fa-solid fa-share-nodes"></i> مشاركة أو حفظ
         </button>
         
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" id="downloadVideoBtn" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-folder-arrow-down"></i> حفظ في الملفات
+          <button type="button" id="downloadVideoBtn" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-folder-arrow-down"></i> تحميل
           </button>
-          <button type="button" onclick="closeVideoPreview()" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-medium">
+          <button type="button" onclick="closeVideoPreview()" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-medium transition">
             إغلاق
           </button>
         </div>
       </div>
-
-      <p class="text-[11px] text-slate-400 leading-relaxed pt-1" id="videoHint">
-        💡 <b>لحفظ الفيديو في تطبيق الصور:</b> اضغط الزر الأخضر بالأعلى ثم اختر <b>"حفظ الفيديو / Save Video"</b> من قائمة مشاركة iOS.
-      </p>
     </div>
   </div>
 
@@ -489,7 +496,7 @@
         <h3 class="text-sm font-bold text-white flex items-center gap-2 font-cairo">
           <i class="fa-brands fa-github text-amber-400"></i> خطوات تحديث الكود في GitHub
         </h3>
-        <button onclick="toggleGithubModal()" class="text-slate-400 hover:text-white">
+        <button onclick="toggleGithubModal()" class="text-slate-400 hover:text-white transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -500,17 +507,12 @@
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-[11px] text-amber-300/90" dir="ltr">
           <p class="text-slate-500"># تحديث الكود</p>
           <p>git add index.html</p>
-          <p>git commit -m "حل صوت الموسيقى وثبات جدول مواقيت الصلاة"</p>
+          <p>git commit -m "إضافة التحسينات الإبداعية والتأثيرات الحركية"</p>
           <p>git push origin main</p>
         </div>
-
-        <ol class="list-decimal list-inside space-y-1.5 text-slate-300 text-[12px]">
-          <li>استبدل محتوى <code class="text-amber-300">index.html</code> في مستودعك بالكود المحدث.</li>
-          <li>سيقوم GitHub بتحديث الصفحة فوراً على رابطك الخاص.</li>
-        </ol>
       </div>
 
-      <button onclick="toggleGithubModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">
+      <button onclick="toggleGithubModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold transition">
         إغلاق
       </button>
     </div>
@@ -569,12 +571,41 @@
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
+      setDynamicGreeting(); // 🔥 تشغيل التحية الديناميكية
       formatArabicDates();
       adjustDateOffset(-9);
       updateCardQuote(document.getElementById('quoteTextInput').value);
       fetchPrayers(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
       fetchWeather(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
     });
+
+    // 🔥 إضافة: دالة التحية الديناميكية
+    function setDynamicGreeting() {
+      const hour = new Date().getHours();
+      let greeting = "";
+      let icon = "";
+      
+      if (hour >= 5 && hour < 12) { 
+        greeting = "☀️ أشرق الصباح"; 
+        icon = "fa-sun"; 
+      }
+      else if (hour >= 12 && hour < 17) { 
+        greeting = "🌤️ طاب نهارك"; 
+        icon = "fa-cloud-sun"; 
+      }
+      else if (hour >= 17 && hour < 20) { 
+        greeting = "🌅 مساء الخير"; 
+        icon = "fa-sun-plant-wilt"; // شكل الغروب
+      }
+      else { 
+        greeting = "🌙 طابت ليلتك"; 
+        icon = "fa-moon"; 
+      }
+      
+      document.getElementById('dynamicGreeting').textContent = greeting;
+      document.getElementById('headerIcon').className = `fa-solid ${icon} text-lg`;
+    }
+
 
     // 1. التاريخ الهجري والميلادي
     function formatArabicDates() {
@@ -646,7 +677,6 @@
       else el.classList.add('hidden');
     }
 
-    // التحجيم الذكي لخط الحكمة لمنع نزول جدول الصلوات نهائياً
     function updateCardQuote(text) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       const t = text.trim() || '""';
@@ -738,7 +768,7 @@
       }
     }
 
-    // 4. حالة الطقس
+    // 4. حالة الطقس وتحديث الإضاءة
     async function fetchWeather(lat, lng) {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
@@ -754,6 +784,9 @@
           document.getElementById('weatherDescDisplay').textContent = status.text;
           document.getElementById('weatherDynamicIcon').innerHTML = status.icon;
           document.getElementById('weatherStatusText').textContent = `${status.text} (${temp}°C) - ${isDay ? 'نهار' : 'ليل'}`;
+
+          // 🔥 إضافة: تغيير ظل البطاقة بناءً على الطقس
+          updateCardGlow(code, isDay);
         }
       } catch (err) {
         console.warn('تعذر جلب الطقس المباشر');
@@ -761,40 +794,26 @@
     }
 
     function getWeatherVisuals(code, isDay) {
-      if (code === 0) {
-        return {
-          text: 'صافٍ تماماً',
-          icon: isDay ? '<i class="fa-solid fa-sun text-amber-400"></i>' : '<i class="fa-solid fa-moon text-indigo-300"></i>'
-        };
-      }
-      if (code >= 1 && code <= 3) {
-        return {
-          text: 'غائم جزئياً',
-          icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>'
-        };
-      }
-      if (code >= 45 && code <= 48) {
-        return {
-          text: 'ضبابي لطيف',
-          icon: '<i class="fa-solid fa-smog text-slate-300"></i>'
-        };
-      }
-      if (code >= 51 && code <= 67) {
-        return {
-          text: 'أمطار خفيفة',
-          icon: '<i class="fa-solid fa-cloud-rain text-blue-400"></i>'
-        };
-      }
-      if (code >= 80 && code <= 82) {
-        return {
-          text: 'أمطار غزيرة',
-          icon: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>'
-        };
-      }
-      return {
-        text: 'معتدل ولطيف',
-        icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>'
-      };
+      if (code === 0) return { text: 'صافٍ تماماً', icon: isDay ? '<i class="fa-solid fa-sun text-amber-400"></i>' : '<i class="fa-solid fa-moon text-indigo-300"></i>' };
+      if (code >= 1 && code <= 3) return { text: 'غائم جزئياً', icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>' };
+      if (code >= 45 && code <= 48) return { text: 'ضبابي لطيف', icon: '<i class="fa-solid fa-smog text-slate-300"></i>' };
+      if (code >= 51 && code <= 67) return { text: 'أمطار خفيفة', icon: '<i class="fa-solid fa-cloud-rain text-blue-400"></i>' };
+      if (code >= 80 && code <= 82) return { text: 'أمطار غزيرة', icon: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>' };
+      return { text: 'معتدل ولطيف', icon: isDay ? '<i class="fa-solid fa-cloud-sun text-amber-400"></i>' : '<i class="fa-solid fa-cloud-moon text-indigo-300"></i>' };
+    }
+
+    // 🔥 دالة تحديث ظل البطاقة
+    function updateCardGlow(code, isDay) {
+        const phoneContainer = document.getElementById('phoneContainer');
+        if (!isDay) {
+            phoneContainer.style.boxShadow = '0 0 40px -10px rgba(99, 102, 241, 0.25)'; // لون ليلي هادئ
+        } else if (code === 0) { 
+            phoneContainer.style.boxShadow = '0 0 40px -10px rgba(245, 158, 11, 0.4)'; // مشمس
+        } else if (code >= 51 && code <= 82) { 
+            phoneContainer.style.boxShadow = '0 0 40px -10px rgba(56, 189, 248, 0.4)'; // ممطر
+        } else { 
+            phoneContainer.style.boxShadow = '0 0 40px -10px rgba(148, 163, 184, 0.3)'; // غائم
+        }
     }
 
     function onCityChanged(cityName) {
@@ -839,7 +858,7 @@
       else el.classList.add('hidden');
     }
 
-    // رفع الوسائط وتفعيل الصوت تلقائياً
+    // رفع الوسائط
     function handleUserMediaUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -853,7 +872,7 @@
         videoEl.src = fileUrl;
         videoEl.classList.remove('hidden');
         imgEl.classList.add('hidden');
-        videoEl.muted = false; // تشغيل الصوت الحقيقي للفيديو
+        videoEl.muted = false; 
         videoEl.volume = 1.0;
         videoEl.play().catch(()=>{});
         
@@ -878,11 +897,11 @@
       const btnLabel = document.getElementById('saveBtnLabel');
       const btnIcon = document.getElementById('saveBtnIcon');
       if (currentMediaType === 'video') {
-        btnLabel.textContent = 'حفظ الفيديو في ألبوم الصور (آيفون)';
+        btnLabel.textContent = 'تجهيز وحفظ الفيديو (آيفون)';
         btnIcon.className = 'fa-solid fa-film text-base';
       } else {
-        btnLabel.textContent = 'حفظ الصورة في ألبوم الصور (آيفون)';
-        btnIcon.className = 'fa-solid fa-download text-base';
+        btnLabel.textContent = 'تجهيز وحفظ الصورة (آيفون)';
+        btnIcon.className = 'fa-solid fa-image text-base';
       }
     }
 
@@ -916,9 +935,7 @@
       ctx.drawImage(media, drawX, drawY, drawW, drawH);
     }
 
-    // زر الحفظ الرئيسي
     function handleMainExport() {
-      // إيقاظ محرك الصوت مباشرة في لمسة المستخدم لنظام iOS
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (AudioCtx) {
@@ -934,47 +951,41 @@
       }
     }
 
-    // تصدير الصورة الثابتة
+    // تصدير الصورة الثابتة (🔥 مع إصلاح CORS)
     async function exportStaticImage() {
       const card = document.getElementById('storyCard');
-      const btn = document.getElementById('saveMainBtn');
-      const originalBtnText = btn.innerHTML;
-
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري تجهيز الصورة...</span>`;
-      btn.disabled = true;
+      const progressBanner = document.getElementById('videoProgressBanner');
+      const progressBar = document.getElementById('videoProgressBar');
+      const statusEl = document.getElementById('videoStatus');
+      
+      progressBanner.classList.remove('hidden');
+      progressBar.style.width = '50%';
+      statusEl.textContent = 'جاري التقاط الصورة...';
 
       try {
         await document.fonts.ready;
         const canvas = await html2canvas(card, {
           scale: 3,
           useCORS: true,
-          allowTaint: true,
+          allowTaint: false, // إصلاح التلوث
           backgroundColor: '#000000'
         });
 
         canvas.toBlob(async (blob) => {
+          progressBanner.classList.add('hidden');
           const file = new File([blob], `daily-card-${Date.now()}.png`, { type: 'image/png' });
-
-          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: 'بطاقة اليوم'
-            });
-          } else {
-            downloadBlobDirectly(blob, `daily-card-${Date.now()}.png`);
-          }
-          btn.innerHTML = originalBtnText;
-          btn.disabled = false;
+          const url = URL.createObjectURL(blob);
+          
+          showImagePreviewModal(url, file);
         }, 'image/png');
 
       } catch (err) {
-        alert('تعذر الحفظ: ' + err.message);
-        btn.innerHTML = originalBtnText;
-        btn.disabled = false;
+        progressBanner.classList.add('hidden');
+        alert('عذراً، فشل تجهيز الصورة بسبب تقييدات المتصفح (CORS) مع بعض الصور الخارجية. جرب اختيار صورة من جهازك.');
       }
     }
 
-    // تصدير مقطع الفيديو بالصوت الكامل وثبات جدول الصلوات
+    // تصدير مقطع الفيديو
     async function exportMotionVideo() {
       const videoEl = document.getElementById('cardVideoBg');
       const card = document.getElementById('storyCard');
@@ -984,7 +995,6 @@
       const statusEl = document.getElementById('videoStatus');
       const durationSelect = document.getElementById('videoDurationSelect');
 
-      // حساب مدة الفيديو الفعلي
       let recordDurationMs = 8000;
       if (durationSelect && durationSelect.value !== 'auto') {
         recordDurationMs = parseInt(durationSelect.value, 10) * 1000;
@@ -996,27 +1006,35 @@
       progressBanner.classList.remove('hidden');
       progressBar.style.width = '5%';
       percentEl.textContent = '5%';
-      statusEl.textContent = `تجهيز مسار الصوت (${(recordDurationMs/1000).toFixed(1)} ث)...`;
+      statusEl.textContent = `تجهيز الطبقات...`;
 
-      // 1. التقاط نصوص البطاقة الشفافة دون المساس بالصلوات أو تغطية الفيديو
       await document.fonts.ready;
       const hadBgBlack = card.classList.contains('bg-black');
       card.classList.remove('bg-black');
       const prevBgColor = card.style.backgroundColor;
       card.style.backgroundColor = 'transparent';
 
-      const overlayCanvas = await html2canvas(card, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
-      });
+      let overlayCanvas;
+      try {
+        // 🔥 محاولة التقاط النصوص (مع حماية ضد الفشل)
+        overlayCanvas = await html2canvas(card, {
+          backgroundColor: null,
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
+          ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
+        });
+      } catch(err) {
+        progressBanner.classList.add('hidden');
+        alert("حدث خطأ أثناء معالجة الطبقات، حاول مرة أخرى.");
+        if (hadBgBlack) card.classList.add('bg-black');
+        card.style.backgroundColor = prevBgColor;
+        return;
+      }
 
       if (hadBgBlack) card.classList.add('bg-black');
       card.style.backgroundColor = prevBgColor;
 
-      // 2. إعداد الكانفاس بالأبعاد الكاملة 720x1280
       const width = 720;
       const height = 1280;
       const renderCanvas = document.createElement('canvas');
@@ -1024,12 +1042,10 @@
       renderCanvas.height = height;
       const ctx = renderCanvas.getContext('2d');
 
-      // 3. تفعيل الصوت وعدم كتمه إطلاقاً
       videoEl.muted = false;
       videoEl.volume = 1.0;
       videoEl.loop = true;
 
-      // فك تشفير مسار الصوت عبر Web Audio API
       let audioTrack = null;
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1042,7 +1058,6 @@
             videoEl._audioSource = actx.createMediaElementSource(videoEl);
             videoEl._audioDest = actx.createMediaStreamDestination();
             videoEl._audioSource.connect(videoEl._audioDest);
-            // ربط الصوت بالمخرج لإبقاء محرك أبل للصوت في حالة نشطة
             const monitorGain = actx.createGain();
             monitorGain.gain.value = 1.0;
             videoEl._audioSource.connect(monitorGain);
@@ -1054,7 +1069,6 @@
         console.warn('Audio Routing Info:', e);
       }
 
-      // إعادة الفيديو للبداية لضمان تطابق الصوت والصورة
       if (videoEl.currentTime > 0.1) {
         videoEl.currentTime = 0;
         await new Promise(res => {
@@ -1074,7 +1088,6 @@
       const FPS = 25;
       const canvasStream = renderCanvas.captureStream(FPS);
 
-      // دمج مسار الصوت الحقيقي مع مسار الصورة
       let combinedStream = canvasStream;
       if (audioTrack) {
         const videoTrack = canvasStream.getVideoTracks()[0];
@@ -1090,7 +1103,7 @@
         });
       } catch (e) {
         progressBanner.classList.add('hidden');
-        alert('تعذر بدء مسجل الفيديو: ' + e.message);
+        alert('تعذر بدء التسجيل: ' + e.message);
         return;
       }
 
@@ -1108,12 +1121,10 @@
         
         progressBar.style.width = (progress * 100).toFixed(0) + '%';
         percentEl.textContent = Math.round(progress * 100) + '%';
-        statusEl.textContent = `تسجيل الصوت والحركة... ${Math.round(progress * 100)}%`;
+        statusEl.textContent = `دمج الصوت والحركة... ${Math.round(progress * 100)}%`;
 
-        // أ) رسم إطار الفيديو الحي
         drawImageCover(ctx, videoEl, width, height);
 
-        // ب) تدرج الإضاءة
         const gradient = ctx.createLinearGradient(0, 0, 0, height);
         gradient.addColorStop(0, 'rgba(0,0,0,0.55)');
         gradient.addColorStop(0.35, 'rgba(0,0,0,0.0)');
@@ -1122,7 +1133,6 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
 
-        // ج) رسم طبقة النصوص الشفافة كاملة بمواقيتها
         ctx.drawImage(overlayCanvas, 0, 0, width, height);
 
         if (elapsed < recordDurationMs) {
@@ -1142,64 +1152,66 @@
 
         if (currentVideoUrl) URL.revokeObjectURL(currentVideoUrl);
         currentVideoUrl = URL.createObjectURL(recordedBlob);
-
-        const previewVideo = document.getElementById('resultVideoPlayer');
-        previewVideo.src = currentVideoUrl;
-        previewVideo.muted = false;
-        previewVideo.play().catch(()=>{});
         
-        const isMp4 = mimeType.includes('mp4');
-        const badge = document.getElementById('formatBadge');
-        badge.textContent = `${isMp4 ? 'MP4' : 'WebM'} (${(recordDurationMs/1000).toFixed(1)}s)`;
-
-        document.getElementById('shareVideoBtn').onclick = async () => {
-          await shareVideoFile(currentVideoBlob, currentVideoMime);
-        };
-
-        document.getElementById('downloadVideoBtn').onclick = () => {
-          downloadVideoFile(currentVideoBlob, currentVideoMime);
-        };
-
-        document.getElementById('videoPreviewModal').classList.remove('hidden');
+        const file = new File([recordedBlob], `daily-story-${Date.now()}.mp4`, { type: mimeType });
+        showVideoPreviewModal(currentVideoUrl, file, mimeType, recordDurationMs);
       };
     }
-
-    // دالة المشاركة للآيفون
-    async function shareVideoFile(blob, mimeType) {
-      const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-      const file = new File([blob], `daily-story-${Date.now()}.${ext}`, { type: mimeType });
+    
+    // إظهار نافذة العرض للصور
+    function showImagePreviewModal(url, file) {
+      document.getElementById('formatBadge').textContent = 'PNG';
+      document.getElementById('resultVideoPlayer').classList.add('hidden');
+      const imgPreview = document.getElementById('resultImagePreview');
+      imgPreview.src = url;
+      imgPreview.classList.remove('hidden');
       
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: 'بطاقة اليوم'
-          });
-          return true;
-        } catch (e) {
-          if (e.name !== 'AbortError') alert('تعذرت المشاركة: ' + e.message);
-          return false;
+      document.getElementById('shareVideoBtn').onclick = async () => {
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: 'بطاقة اليوم' });
+        } else {
+            downloadBlobDirectly(file, file.name);
         }
-      } else {
-        downloadVideoFile(blob, mimeType);
-      }
-      return false;
+      };
+
+      document.getElementById('downloadVideoBtn').onclick = () => {
+        downloadBlobDirectly(file, file.name);
+      };
+      
+      document.getElementById('videoPreviewModal').classList.remove('hidden');
+    }
+    
+    // إظهار نافذة العرض للفيديو
+    function showVideoPreviewModal(url, file, mimeType, durationMs) {
+      const isMp4 = mimeType.includes('mp4');
+      document.getElementById('formatBadge').textContent = `${isMp4 ? 'MP4' : 'WebM'} (${(durationMs/1000).toFixed(1)}s)`;
+      
+      document.getElementById('resultImagePreview').classList.add('hidden');
+      const previewVideo = document.getElementById('resultVideoPlayer');
+      previewVideo.src = url;
+      previewVideo.muted = false;
+      previewVideo.classList.remove('hidden');
+      previewVideo.play().catch(()=>{});
+
+      document.getElementById('shareVideoBtn').onclick = async () => {
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'بطاقة اليوم' });
+          } catch(e) {}
+        } else {
+            downloadBlobDirectly(file, file.name);
+        }
+      };
+
+      document.getElementById('downloadVideoBtn').onclick = () => {
+        downloadBlobDirectly(file, file.name);
+      };
+
+      document.getElementById('videoPreviewModal').classList.remove('hidden');
     }
 
-    function downloadVideoFile(blob, mimeType) {
-      const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `daily-story-${Date.now()}.${ext}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    }
-
-    function downloadBlobDirectly(blob, filename) {
-      const url = URL.createObjectURL(blob);
+    function downloadBlobDirectly(blobOrFile, filename) {
+      const url = URL.createObjectURL(blobOrFile);
       const a = document.createElement('a');
       a.href = url;
       a.download = filename;
