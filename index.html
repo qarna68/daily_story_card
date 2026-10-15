@@ -37,6 +37,9 @@
       word-spacing: normal !important;
       font-feature-settings: "kern" 1, "liga" 1;
       -webkit-font-smoothing: antialiased;
+      /* 🌟 حل مشكلة تفاعل الأسطر والالتفاف اليدوي */
+      white-space: pre-line;
+      word-break: break-word;
     }
 
     .glass-panel {
@@ -73,13 +76,13 @@
     
     #phoneContainer { transition: box-shadow 0.8s ease-in-out; }
 
-    /* خصائص السحب والإفلات (التحكم اليدوي) */
+    /* خصائص السحب والإفلات */
     #quoteTransformWrapper {
       position: absolute;
       top: 45%;
       left: 50%;
-      margin-left: -150px;
-      width: 300px;
+      margin-left: -130px;
+      width: 260px;
       z-index: 40;
       touch-action: none;
       cursor: grab;
@@ -91,18 +94,16 @@
       cursor: grabbing;
     }
 
-    /* أشكال المربع (أفقي ورأسي) */
     .shape-horizontal {
       width: 100%;
       min-height: 80px;
     }
     .shape-vertical {
-      width: 180px !important;
+      width: 150px !important;
       min-height: 220px;
       padding: 15px !important;
     }
 
-    /* إزالة الخلفية للورق */
     .no-glass {
       background: transparent !important;
       backdrop-filter: none !important;
@@ -116,21 +117,21 @@
 
   <header class="w-full max-w-4xl flex items-center justify-between pb-5 border-b border-slate-800 mb-6 animate-fade-up">
     <div class="flex items-center gap-3">
-      <div id="headerIconContainer" class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
         <i id="headerIcon" class="fa-solid fa-sun text-lg"></i>
       </div>
       <div>
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">
           بطاقة اليوم <span id="dynamicGreeting" class="text-amber-400 text-sm font-normal"></span>
         </h1>
-        <p class="text-xs text-slate-400">تحكم يدوي، دمج سينمائي على الورق، وتصميم احترافي</p>
+        <p class="text-xs text-slate-400">تحكم كامل بالأسطر، سحب حر، ودمج احترافي</p>
       </div>
     </div>
   </header>
 
   <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     
-    <!-- ================== قسم الإعدادات ================== -->
+    <!-- قسم الإعدادات -->
     <div class="lg:col-span-6 space-y-4 animate-fade-up delay-1">
       <div class="glass-panel rounded-2xl p-5 space-y-4">
         
@@ -140,129 +141,101 @@
           </h2>
         </div>
 
-        <!-- 1. إزاحة وتعتيم (القسم العلوي) -->
+        <!-- إزاحة وتعتيم -->
         <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800/80 space-y-3">
           <div>
             <div class="flex items-center justify-between text-xs mb-1.5">
-              <span class="text-slate-300 font-medium flex items-center gap-1.5">
-                <i class="fa-solid fa-arrows-up-down text-amber-400 text-[11px]"></i> إزاحة (التاريخ والحقوق) رأسياً
-              </span>
+              <span class="text-slate-300 font-medium">إزاحة (التاريخ والحقوق) رأسياً</span>
             </div>
             <input type="range" min="-15" max="30" value="0" step="1" oninput="adjustDateOffset(this.value)" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
           </div>
-          
           <div class="pt-2 border-t border-slate-800">
             <div class="flex items-center justify-between text-xs mb-1.5">
-              <span class="text-slate-300 font-medium flex items-center gap-1.5">
-                <i class="fa-solid fa-fill-drip text-indigo-400 text-[11px]"></i> تعتيم خلفية (التاريخ والحقوق)
-              </span>
+              <span class="text-slate-300 font-medium">تعتيم خلفية (التاريخ والحقوق)</span>
             </div>
             <input type="range" min="0" max="100" value="40" step="5" oninput="updateTopBgOpacity(this.value)" class="w-full accent-indigo-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
           </div>
         </div>
 
-        <!-- 2. حقوق التصميم -->
+        <!-- حقوق التصميم -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-signature text-purple-400"></i> حقوق التصميم (يسار)
-            </label>
+            <label class="text-xs font-semibold text-slate-300">حقوق التصميم (يسار)</label>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" checked onchange="toggleElement('watermarkBoxOverlay', this.checked)" class="sr-only peer">
               <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
             </label>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="wmPrefixInput" value="تصميم" oninput="updateWatermarkText(this.value, null)" placeholder="الكلمة العلوية" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
-            <input type="text" id="wmUserInput" value="@SAB3-77" oninput="updateWatermarkText(null, this.value)" placeholder="اليوزر" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
+            <input type="text" id="wmPrefixInput" value="تصميم" oninput="updateWatermarkText(this.value, null)" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+            <input type="text" id="wmUserInput" value="@SAB3-77" oninput="updateWatermarkText(null, this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" dir="ltr">
           </div>
         </div>
 
-        <!-- 3. النص (الحكمة) والتحكم الحر والورقي -->
+        <!-- النص على الورقة -->
         <div class="space-y-3 pt-3 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-hand-pointer text-amber-400"></i> النص (اسحب المربع بإصبعك للتحريك)
+              <i class="fa-solid fa-hand-pointer text-amber-400"></i> نص الورقة (اضغط Enter للنزول سطر جديد)
             </label>
-            <button onclick="generateAiQuote()" class="text-amber-400 hover:text-amber-300 text-[11px] flex items-center gap-1">
-              <i class="fa-solid fa-sparkles"></i> اقتراح
-            </button>
+            <button onclick="generateAiQuote()" class="text-amber-400 hover:text-amber-300 text-[11px]">اقتراح</button>
           </div>
-          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."</textarea>
+          <textarea id="quoteTextInput" rows="4" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500 resize-none leading-relaxed">التفاؤل والصبر
+هما طريقك لتجاوز
+صعوبات الحياة
+والسعي نحو الأهداف ..</textarea>
           
-          <!-- أزرار الشكل واللون والورق -->
           <div class="grid grid-cols-2 gap-2">
-            <select onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-              <option value="font-amiri" selected>الخط الأميري (كلاسيكي)</option>
-              <option value="font-cairo">خط كايرو (عصري)</option>
-              <option value="font-tajawal">خط تجوال (ناعم)</option>
+            <select onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-xs text-white">
+              <option value="font-amiri" selected>الخط الأميري</option>
+              <option value="font-cairo">خط كايرو</option>
+              <option value="font-tajawal">خط تجوال</option>
             </select>
-            <select onchange="updateQuoteTextColor(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-              <option value="#fef3c7" selected>لون النص: أبيض سكري (للخلفية الداكنة)</option>
-              <option value="#1e293b">لون النص: كحلي داكن (للورق الأبيض)</option>
-              <option value="#000000">لون النص: أسود (للورق الأبيض)</option>
-              <option value="#fbbf24">لون النص: ذهبي</option>
+            <select onchange="updateQuoteTextColor(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-xs text-white">
+              <option value="#1e293b" selected>لون النص: كحلي داكن (للورق الأبيض)</option>
+              <option value="#000000">لون النص: أسود غامق</option>
+              <option value="#fef3c7">لون النص: أبيض</option>
+              <option value="#b45309">لون النص: بني عتيق</option>
             </select>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <button onclick="toggleQuoteShape()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-lg px-2 py-2 text-[11px] font-medium transition">
-              <i class="fa-solid fa-rotate"></i> شكل (أفقي/رأسي)
-            </button>
-            <button id="toggleBgBtn" onclick="toggleQuoteBackground()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-lg px-2 py-2 text-[11px] font-medium transition">
-              <i class="fa-solid fa-eye-slash text-rose-400"></i> إخفاء خلفية النص (للورق)
-            </button>
+            <button onclick="toggleQuoteShape()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-lg px-2 py-2 text-[11px]">تبديل شكل المربع</button>
+            <button id="toggleBgBtn" onclick="toggleQuoteBackground()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-lg px-2 py-2 text-[11px]">إخفاء الخلفية للورق</button>
           </div>
 
-          <!-- أدوات التدوير والتكبير -->
-          <div class="bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 space-y-3 mt-1">
+          <div class="bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 space-y-3">
              <div>
-                <div class="flex justify-between text-[10px] text-slate-400 mb-1.5">
-                   <span>إمالة لليسار</span>
-                   <span class="text-amber-400"><i class="fa-solid fa-rotate-right"></i> تدوير المربع (لضبطه على الورقة)</span>
-                   <span>إمالة لليمين</span>
-                </div>
+                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><span>إمالة لليسار</span><span>تدوير المربع</span><span>لليمين</span></div>
                 <input type="range" min="-45" max="45" value="0" step="1" oninput="adjustQuoteRotation(this.value)" class="w-full accent-amber-500 cursor-pointer h-1 bg-slate-700 rounded-lg">
              </div>
-             <div class="pt-1 border-t border-slate-800">
-                <div class="flex justify-between text-[10px] text-slate-400 mb-1.5">
-                   <span>تصغير ➖</span>
-                   <span class="text-amber-400"><i class="fa-solid fa-magnifying-glass"></i> حجم المربع</span>
-                   <span>تكبير ➕</span>
-                </div>
-                <input type="range" min="50" max="150" value="100" step="2" oninput="adjustQuoteScale(this.value)" class="w-full accent-amber-500 cursor-pointer h-1 bg-slate-700 rounded-lg">
+             <div>
+                <div class="flex justify-between text-[10px] text-slate-400 mb-1"><span>تصغير</span><span>حجم النص والمربع</span><span>تكبير</span></div>
+                <input type="range" min="40" max="140" value="90" step="2" oninput="adjustQuoteScale(this.value)" class="w-full accent-amber-500 cursor-pointer h-1 bg-slate-700 rounded-lg">
              </div>
           </div>
         </div>
 
-        <!-- 4. القسم السفلي المرن (حدث اليوم / نص مخصص) -->
+        <!-- القسم السفلي -->
         <div class="space-y-2 pt-3 border-t border-slate-800/80">
            <div class="flex items-center justify-between">
-             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                <i class="fa-solid fa-align-center text-rose-400"></i> القسم السفلي (حدث اليوم / نص مخصص)
-             </label>
+             <label class="text-xs font-semibold text-slate-300">القسم السفلي</label>
              <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" checked onchange="toggleElement('historyEventBox', this.checked)" class="sr-only peer">
               <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
              </label>
            </div>
-           <div class="flex gap-1.5">
-             <input type="text" id="historyTextInput" value="في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ." oninput="updateHistoryText(this.value)" placeholder="اكتب حدثاً، نصيحة، أو عبارة..." class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
-             <button onclick="generateHistoryEvent()" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-400 rounded-xl px-3 py-1.5 text-[11px] font-bold flex items-center gap-1 transition whitespace-nowrap">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-             </button>
-           </div>
+           <input type="text" id="historyTextInput" value="في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري لأول مرة." oninput="updateHistoryText(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white">
         </div>
 
-        <!-- 5. اختيار الوسائط واستخراج الصوت -->
+        <!-- اختيار الوسائط -->
         <div class="space-y-3 pt-3 border-t border-slate-800/80">
-          <label class="cursor-pointer w-full bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
-            <i class="fa-solid fa-photo-film text-amber-400 text-sm group-hover:scale-110 transition"></i>
+          <label class="cursor-pointer w-full bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition">
+            <i class="fa-solid fa-photo-film text-amber-400 text-sm"></i>
             <span class="text-xs font-medium text-slate-200">اختر فيديو أو صورة للخلفية</span>
             <input type="file" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
           </label>
-          
-          <label class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
+          <label class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition">
             <i class="fa-solid fa-file-audio text-emerald-400 text-sm"></i>
             <span class="text-xs font-medium text-slate-200" id="audioExtractLabel">استخراج الموسيقى من فيديو آخر...</span>
             <input type="file" accept="video/*" class="hidden" onchange="handleAudioExtraction(event)">
@@ -272,17 +245,16 @@
 
       </div>
 
-      <!-- الزر الرئيسي للحفظ -->
       <div class="space-y-2">
         <button onclick="handleMainExport()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
-          <i id="saveBtnIcon" class="fa-solid fa-film text-base"></i>
-          <span id="saveBtnLabel">تجهيز وحفظ الفيديو (آيفون)</span>
+          <i class="fa-solid fa-film text-base"></i>
+          <span>تجهيز وحفظ الفيديو (آيفون)</span>
         </button>
       </div>
 
     </div>
 
-    <!-- ================== قسم المعاينة المباشرة ================== -->
+    <!-- المعاينة المباشرة -->
     <div class="lg:col-span-6 flex flex-col items-center animate-fade-up delay-2">
       
       <div id="phoneContainer" class="relative w-full max-w-[340px] md:max-w-[370px] rounded-[44px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl">
@@ -296,13 +268,11 @@
 
           <!-- القسم العلوي -->
           <div id="topSectionContainer" class="relative z-10 w-full flex justify-between items-start pt-1.5 px-1.5 flex-shrink-0 transition-transform duration-300 pointer-events-none">
-            <!-- التاريخ (يمين) -->
             <div id="dateBoxOverlay" class="top-overlay-bg rounded-2xl p-2.5 flex flex-col justify-center items-center text-center transition-colors duration-300 min-w-[110px] min-h-[64px]">
                <span id="dayNameText" class="text-amber-400 font-cairo font-bold text-[13px] leading-none mb-1">الخميس</span>
                <span id="hijriDateText" class="text-white font-cairo font-medium text-[11px] leading-tight">١٥ ربيع الأول ١٤٤٨ هـ</span>
                <span id="gregorianDateText" class="text-slate-300 font-cairo text-[10px] leading-tight">١٥ أكتوبر ٢٠٢٦ م</span>
             </div>
-            <!-- الحقوق (يسار) -->
             <div id="watermarkBoxOverlay" class="top-overlay-bg rounded-2xl p-2.5 flex flex-col justify-center items-center text-center transition-colors duration-300 min-w-[110px] min-h-[64px]">
                <span id="wmPrefixDisplay" class="text-amber-400 font-cairo font-bold text-[13px] leading-none mb-1">تصميم</span>
                <span id="wmUserDisplay" class="text-white font-cairo font-medium text-[11px] leading-tight" dir="ltr">@SAB3-77</span>
@@ -310,11 +280,14 @@
             </div>
           </div>
 
-          <!-- ==================== حاوية النص القابلة للسحب ==================== -->
+          <!-- النص القابل للسحب والتحكم اليدوي -->
           <div id="quoteTransformWrapper" title="اسحبني!">
-            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-4 shape-horizontal flex items-center justify-center text-center border border-white/10 mx-auto transition-all duration-300">
-              <p id="quoteTextDisplay" class="font-amiri text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center drop-shadow-md pointer-events-none w-full">
-                "التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."
+            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3 py-3 shape-horizontal flex items-center justify-center text-center border border-white/10 mx-auto transition-all duration-300 no-glass" style="background: transparent !important; border: none !important; box-shadow: none !important;">
+              <p id="quoteTextDisplay" class="font-amiri text-sm text-[#1e293b] font-bold arabic-clean leading-loose m-0 p-0 text-center pointer-events-none w-full" style="font-size: 1.1rem; color: #1e293b;">
+                التفاؤل والصبر
+                هما طريقك لتجاوز
+                صعوبات الحياة
+                والسعي نحو الأهداف ..
               </p>
             </div>
           </div>
@@ -325,7 +298,7 @@
           <div class="relative z-10 w-full space-y-1 pb-2 flex-shrink-0 px-2 pointer-events-none">
             <div id="historyEventBox" class="glass-panel rounded-2xl p-3 border border-white/10 flex-shrink-0 transition-all duration-300">
               <p id="historyEventDisplay" class="text-[11px] md:text-xs text-slate-200 font-cairo leading-relaxed text-center">
-                في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ.
+                في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري لأول مرة.
               </p>
             </div>
           </div>
@@ -335,7 +308,6 @@
     </div>
   </main>
 
-  <!-- نوافذ المعاينة والحفظ -->
   <div id="videoProgressBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 border border-slate-700 shadow-2xl rounded-2xl p-4 w-[90%] max-w-sm hidden flex flex-col items-center text-center backdrop-blur-md">
     <div class="flex items-center gap-2 mb-2">
       <i class="fa-solid fa-circle-notch fa-spin text-amber-400 text-sm"></i>
@@ -344,18 +316,12 @@
     <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
       <div id="videoProgressBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-0 transition-all duration-150"></div>
     </div>
-    <div class="flex justify-between w-full mt-1.5 text-[11px] text-slate-400 font-mono">
-      <span id="videoStatus">دمج الطبقات...</span>
-      <span id="videoPercent" class="text-amber-400 font-bold">0%</span>
-    </div>
   </div>
 
   <div id="videoPreviewModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-        <h3 class="text-sm font-bold text-white font-cairo flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check text-emerald-400"></i> البطاقة جاهزة!
-        </h3>
+        <h3 class="text-sm font-bold text-white font-cairo">البطاقة جاهزة!</h3>
         <span id="formatBadge" class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full font-bold">MP4</span>
       </div>
       <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-64 mx-auto border border-white/10 shadow-lg relative">
@@ -363,12 +329,10 @@
          <img id="resultImagePreview" class="w-full h-full object-cover hidden" />
       </div>
       <div class="space-y-2 pt-1">
-        <button type="button" id="shareVideoBtn" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl text-xs font-cairo shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-95">
+        <button type="button" id="shareVideoBtn" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold rounded-xl text-xs font-cairo flex items-center justify-center gap-2">
           <i class="fa-solid fa-share-nodes"></i> مشاركة أو حفظ
         </button>
-        <button type="button" onclick="closeVideoPreview()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-medium transition">
-          إغلاق
-        </button>
+        <button type="button" onclick="closeVideoPreview()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-medium">إغلاق</button>
       </div>
     </div>
   </div>
@@ -377,16 +341,14 @@
     let currentMediaType = 'video';
     let hasExtractedAudio = false;
     let isVerticalShape = false;
-    let isGlassHidden = false;
+    let isGlassHidden = true; // الافتراضي مخفي ليناسب الورقة مباشرة
 
-    // متغيرات السحب (Drag & Drop)
     let isDragging = false;
     let currentX = 0; let currentY = 0;
     let initialX = 0; let initialY = 0;
     let xOffset = 0;  let yOffset = 0;
-    
     let quoteRotateVal = 0;
-    let quoteScaleVal = 1;
+    let quoteScaleVal = 0.9;
 
     const dragItem = document.getElementById("quoteTransformWrapper");
 
@@ -405,20 +367,13 @@
         initialX = e.clientX - xOffset;
         initialY = e.clientY - yOffset;
       }
-      if (e.target === dragItem || dragItem.contains(e.target)) {
-        isDragging = true;
-      }
+      if (e.target === dragItem || dragItem.contains(e.target)) isDragging = true;
     }
 
-    function dragEnd(e) {
-      initialX = currentX;
-      initialY = currentY;
-      isDragging = false;
-    }
-
+    function dragEnd() { initialX = currentX; initialY = currentY; isDragging = false; }
     function drag(e) {
       if (isDragging) {
-        e.preventDefault(); 
+        e.preventDefault();
         if (e.type === "touchmove") {
           currentX = e.touches[0].clientX - initialX;
           currentY = e.touches[0].clientY - initialY;
@@ -426,8 +381,7 @@
           currentX = e.clientX - initialX;
           currentY = e.clientY - initialY;
         }
-        xOffset = currentX;
-        yOffset = currentY;
+        xOffset = currentX; yOffset = currentY;
         applyQuoteTransform();
       }
     }
@@ -436,48 +390,37 @@
         dragItem.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${quoteScaleVal}) rotate(${quoteRotateVal}deg)`;
     }
 
-    function adjustQuoteScale(val) {
-        quoteScaleVal = val / 100;
-        applyQuoteTransform();
-    }
-    
-    function adjustQuoteRotation(val) {
-        quoteRotateVal = val;
-        applyQuoteTransform();
-    }
+    function adjustQuoteScale(val) { quoteScaleVal = val / 100; applyQuoteTransform(); }
+    function adjustQuoteRotation(val) { quoteRotateVal = val; applyQuoteTransform(); }
 
     function toggleQuoteShape() {
         const box = document.getElementById('quoteCardBox');
         isVerticalShape = !isVerticalShape;
-        if(isVerticalShape) {
-            box.classList.remove('shape-horizontal');
-            box.classList.add('shape-vertical');
-        } else {
-            box.classList.remove('shape-vertical');
-            box.classList.add('shape-horizontal');
-        }
+        if(isVerticalShape) { box.classList.remove('shape-horizontal'); box.classList.add('shape-vertical'); }
+        else { box.classList.remove('shape-vertical'); box.classList.add('shape-horizontal'); }
     }
 
-    // 🌟 جديد: دالة تبديل وإخفاء الخلفية للوضع الورقي
     function toggleQuoteBackground() {
         const box = document.getElementById('quoteCardBox');
         const btn = document.getElementById('toggleBgBtn');
         isGlassHidden = !isGlassHidden;
-        
         if(isGlassHidden) {
             box.classList.add('no-glass');
-            btn.innerHTML = `<i class="fa-solid fa-eye text-emerald-400"></i> إظهار الخلفية الزجاجية`;
+            box.style.background = 'transparent';
+            box.style.border = 'none';
+            box.style.boxShadow = 'none';
+            btn.innerHTML = `إظهار الخلفية`;
         } else {
             box.classList.remove('no-glass');
-            btn.innerHTML = `<i class="fa-solid fa-eye-slash text-rose-400"></i> إخفاء خلفية النص (للورق)`;
+            box.style.background = '';
+            box.style.border = '';
+            box.style.boxShadow = '';
+            btn.innerHTML = `إخفاء الخلفية للورق`;
         }
     }
 
-    // 🌟 جديد: دالة تغيير لون النص ليتوافق مع لون الورق
     function updateQuoteTextColor(colorHex) {
-        const quoteEl = document.getElementById('quoteTextDisplay');
-        quoteEl.className = quoteEl.className.replace(/text-\w+-\d+/g, '');
-        quoteEl.style.color = colorHex;
+        document.getElementById('quoteTextDisplay').style.color = colorHex;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -488,54 +431,28 @@
       document.getElementById('phoneContainer').style.boxShadow = '0 0 40px -10px rgba(245, 158, 11, 0.2)';
     });
 
-    const historicalEvents = [
-      "في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة.",
-      "تذكر أن قطرة الماء تثقب الحجر، ليس بالعنف، ولكن بالتواصل والتكرار.",
-      "في مثل هذا اليوم عام 1964، حصل مارتن لوثر كينغ على جائزة نوبل للسلام.",
-      "لا شيء مستحيل عندما يكون لديك العزيمة والتوكل على الله."
-    ];
-
     function setDynamicGreeting() {
       const hour = new Date().getHours();
-      let greeting = ""; let icon = "";
-      if (hour >= 5 && hour < 12) { greeting = "☀️ أشرق الصباح"; icon = "fa-sun"; }
-      else if (hour >= 12 && hour < 17) { greeting = "🌤️ طاب نهارك"; icon = "fa-cloud-sun"; }
-      else if (hour >= 17 && hour < 20) { greeting = "🌅 مساء الخير"; icon = "fa-sun-plant-wilt"; }
-      else { greeting = "🌙 طابت ليلتك"; icon = "fa-moon"; }
+      let greeting = hour >= 5 && hour < 12 ? "☀️ أشرق الصباح" : hour < 17 ? "🌤️ طاب نهارك" : hour < 20 ? "🌅 مساء الخير" : "🌙 طابت ليلتك";
       document.getElementById('dynamicGreeting').textContent = greeting;
-      document.getElementById('headerIcon').className = `fa-solid ${icon} text-lg`;
     }
 
     function formatArabicDates() {
       const now = new Date();
-      const dayFormatter = new Intl.DateTimeFormat('ar-SA', { weekday: 'long' });
-      document.getElementById('dayNameText').textContent = dayFormatter.format(now);
-      const gregFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
-      document.getElementById('gregorianDateText').textContent = gregFormatter.format(now).replace('هـ', '').trim() + ' م';
+      document.getElementById('dayNameText').textContent = new Intl.DateTimeFormat('ar-SA', { weekday: 'long' }).format(now);
+      document.getElementById('gregorianDateText').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' }).format(now).replace('هـ', '').trim() + ' م';
       try {
-        const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
-        let hijriRaw = hijriFormatter.format(now).replace(/هـ/g, '').replace(/AH/g, '').trim();
-        document.getElementById('hijriDateText').textContent = hijriRaw + ' هـ';
-      } catch (e) { document.getElementById('hijriDateText').textContent = '١٥ ربيع الأول ١٤٤٨ هـ'; }
+        document.getElementById('hijriDateText').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(now).replace(/هـ/g, '').replace(/AH/g, '').trim() + ' هـ';
+      } catch (e) {}
     }
 
     function updateTopBgOpacity(val) {
-      const elements = document.querySelectorAll('.top-overlay-bg');
-      elements.forEach(el => { el.style.backgroundColor = `rgba(0, 0, 0, ${val/100})`; });
+      document.querySelectorAll('.top-overlay-bg').forEach(el => { el.style.backgroundColor = `rgba(0, 0, 0, ${val/100})`; });
     }
 
     function adjustDateOffset(val) { document.getElementById('topSectionContainer').style.transform = `translateY(${val}px)`; }
-    function toggleElement(elementId, isVisible) {
-      const el = document.getElementById(elementId);
-      if (isVisible) el.classList.remove('hidden'); else el.classList.add('hidden');
-    }
-
-    function updateHistoryText(text) { document.getElementById('historyEventDisplay').textContent = text.trim() || 'اكتب نصاً هنا...'; }
-    function generateHistoryEvent() {
-      const rnd = historicalEvents[Math.floor(Math.random() * historicalEvents.length)];
-      document.getElementById('historyTextInput').value = rnd; updateHistoryText(rnd);
-    }
-
+    function toggleElement(elementId, isVisible) { const el = document.getElementById(elementId); if (isVisible) el.classList.remove('hidden'); else el.classList.add('hidden'); }
+    function updateHistoryText(text) { document.getElementById('historyEventDisplay').textContent = text.trim() || ''; }
     function updateWatermarkText(prefix, user) {
         if(prefix !== null) document.getElementById('wmPrefixDisplay').textContent = prefix.trim() || 'تصميم';
         if(user !== null) document.getElementById('wmUserDisplay').textContent = user.trim() || '';
@@ -548,35 +465,28 @@
     }
 
     function updateCardQuote(text) {
-      const quoteEl = document.getElementById('quoteTextDisplay');
-      const t = text.trim() || '""';
-      quoteEl.textContent = t;
-      if (t.length > 100) { quoteEl.style.fontSize = '0.75rem'; quoteEl.style.lineHeight = '1.45'; }
-      else if (t.length > 50) { quoteEl.style.fontSize = '0.90rem'; quoteEl.style.lineHeight = '1.55'; }
-      else { quoteEl.style.fontSize = '1.15rem'; quoteEl.style.lineHeight = '1.75'; }
+      document.getElementById('quoteTextDisplay').textContent = text.trim() || '';
     }
     
     function generateAiQuote() {
-      const quotes = ["سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "الأحلام لا تموت طالما هناك شغف للوصول."];
-      const rnd = quotes[Math.floor(Math.random() * quotes.length)];
-      document.getElementById('quoteTextInput').value = rnd; updateCardQuote(rnd);
+      const txt = "التفاؤل والصبر\nهما طريقك لتجاوز\nصعوبات الحياة\nوالسعي نحو الأهداف ..";
+      document.getElementById('quoteTextInput').value = txt; updateCardQuote(txt);
     }
 
     function handleUserMediaUpload(e) {
       const file = e.target.files[0]; if (!file) return;
-      const imgEl = document.getElementById('cardImageBg');
-      const videoEl = document.getElementById('cardVideoBg');
       if (file.type.startsWith('video/')) {
-        currentMediaType = 'video'; videoEl.src = URL.createObjectURL(file);
-        videoEl.classList.remove('hidden'); imgEl.classList.add('hidden');
-        videoEl.muted = hasExtractedAudio; videoEl.play().catch(()=>{});
+        currentMediaType = 'video'; const v = document.getElementById('cardVideoBg');
+        v.src = URL.createObjectURL(file); v.classList.remove('hidden');
+        document.getElementById('cardImageBg').classList.add('hidden');
+        v.muted = hasExtractedAudio; v.play().catch(()=>{});
       } else if (file.type.startsWith('image/')) {
-        currentMediaType = 'image'; const reader = new FileReader();
-        reader.onload = (event) => {
-          imgEl.src = event.target.result; imgEl.classList.remove('hidden');
-          videoEl.classList.add('hidden'); videoEl.pause();
+        currentMediaType = 'image'; const r = new FileReader();
+        r.onload = (e) => {
+          const img = document.getElementById('cardImageBg'); img.src = e.target.result;
+          img.classList.remove('hidden'); document.getElementById('cardVideoBg').classList.add('hidden');
         };
-        reader.readAsDataURL(file);
+        r.readAsDataURL(file);
       }
     }
 
@@ -584,88 +494,48 @@
       const file = e.target.files[0]; if (!file) return;
       if (file.type.startsWith('video/')) {
         document.getElementById('extractedAudioPlayer').src = URL.createObjectURL(file);
-        hasExtractedAudio = true;
-        const videoBg = document.getElementById('cardVideoBg');
-        if(videoBg) videoBg.muted = true;
+        hasExtractedAudio = true; document.getElementById('cardVideoBg').muted = true;
         document.getElementById('extractedAudioPlayer').play().then(() => {
             document.getElementById('audioExtractLabel').textContent = "✅ تم دمج الموسيقى!";
-        }).catch(err => { console.log(err); });
+        }).catch(err => {});
       }
     }
 
     function handleMainExport() {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx) {
-          if (!window._sharedAudioCtx) window._sharedAudioCtx = new AudioCtx();
-          if (window._sharedAudioCtx.state === 'suspended') window._sharedAudioCtx.resume();
-        }
-      } catch(e){}
       if (currentMediaType === 'video' || hasExtractedAudio) { exportMotionVideo(); } else { exportStaticImage(); }
     }
 
     async function exportStaticImage() {
       const card = document.getElementById('storyCard');
-      const progressBanner = document.getElementById('videoProgressBanner');
-      progressBanner.classList.remove('hidden');
+      const pb = document.getElementById('videoProgressBanner'); pb.classList.remove('hidden');
       try {
         await document.fonts.ready;
         const canvas = await html2canvas(card, { scale: 3, useCORS: true, allowTaint: false, backgroundColor: '#000000' });
-        canvas.toBlob(async (blob) => {
-          progressBanner.classList.add('hidden');
-          const file = new File([blob], `daily-card-${Date.now()}.png`, { type: 'image/png' });
-          showImagePreviewModal(URL.createObjectURL(blob), file);
+        canvas.toBlob((blob) => {
+          pb.classList.add('hidden');
+          showImagePreviewModal(URL.createObjectURL(blob), new File([blob], `card.png`, { type: 'image/png' }));
         }, 'image/png');
-      } catch (err) { progressBanner.classList.add('hidden'); alert('حدث خطأ.'); }
-    }
-
-    function pickBestMimeType() {
-      const candidates = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp8,opus', 'video/webm'];
-      for (const c of candidates) { try { if (MediaRecorder.isTypeSupported(c)) return c; } catch (e) {} }
-      return 'video/mp4';
-    }
-    
-    function drawImageCover(ctx, media, targetW, targetH) {
-      const mWidth = media.videoWidth || media.naturalWidth || media.width;
-      const mHeight = media.videoHeight || media.naturalHeight || media.height;
-      if (!mWidth || !mHeight) return;
-      const scale = Math.max(targetW / mWidth, targetH / mHeight);
-      const drawW = mWidth * scale; const drawH = mHeight * scale;
-      ctx.drawImage(media, (targetW - drawW) / 2, (targetH - drawH) / 2, drawW, drawH);
+      } catch (err) { pb.classList.add('hidden'); alert('حدث خطأ.'); }
     }
 
     async function exportMotionVideo() {
       const videoEl = document.getElementById('cardVideoBg');
       const extAudioEl = document.getElementById('extractedAudioPlayer');
       const card = document.getElementById('storyCard');
-      const progressBanner = document.getElementById('videoProgressBanner');
+      const pb = document.getElementById('videoProgressBanner');
       const progressBar = document.getElementById('videoProgressBar');
-      const percentEl = document.getElementById('videoPercent');
 
-      let recordDurationMs = 8000;
-      if(hasExtractedAudio && extAudioEl.duration) { recordDurationMs = Math.round(extAudioEl.duration * 1000); } 
-      else if (currentMediaType === 'video' && videoEl.duration) { recordDurationMs = Math.round(videoEl.duration * 1000); }
-      recordDurationMs = Math.max(5000, Math.min(recordDurationMs, 60000));
+      let duration = 8000;
+      if(hasExtractedAudio && extAudioEl.duration) duration = Math.round(extAudioEl.duration * 1000);
+      else if (currentMediaType === 'video' && videoEl.duration) duration = Math.round(videoEl.duration * 1000);
 
-      progressBanner.classList.remove('hidden');
-      progressBar.style.width = '5%';
-
+      pb.classList.remove('hidden'); progressBar.style.width = '10%';
       await document.fonts.ready;
-      const hadBgBlack = card.classList.contains('bg-black');
-      card.classList.remove('bg-black');
-      const prevBgColor = card.style.backgroundColor; card.style.backgroundColor = 'transparent';
-
-      let overlayCanvas;
-      try {
-        overlayCanvas = await html2canvas(card, {
-          backgroundColor: null, scale: 2, useCORS: true, allowTaint: false,
-          ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
-        });
-      } catch(err) {
-        progressBanner.classList.add('hidden'); alert("خطأ.");
-        if (hadBgBlack) card.classList.add('bg-black'); return;
-      }
-      if (hadBgBlack) card.classList.add('bg-black'); card.style.backgroundColor = prevBgColor;
+      
+      const overlayCanvas = await html2canvas(card, {
+        backgroundColor: null, scale: 2, useCORS: true, allowTaint: false,
+        ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
+      });
 
       const width = 720; const height = 1280;
       const renderCanvas = document.createElement('canvas'); renderCanvas.width = width; renderCanvas.height = height;
@@ -676,101 +546,75 @@
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (AudioCtx) {
           if (!window._sharedAudioCtx) window._sharedAudioCtx = new AudioCtx();
-          const actx = window._sharedAudioCtx;
-          if (actx.state === 'suspended') await actx.resume();
-
-          let sourceMedia = hasExtractedAudio ? extAudioEl : videoEl;
-          if (!sourceMedia._audioSource) {
-            sourceMedia._audioSource = actx.createMediaElementSource(sourceMedia);
-            sourceMedia._audioDest = actx.createMediaStreamDestination();
-            sourceMedia._audioSource.connect(sourceMedia._audioDest);
-            const monitorGain = actx.createGain(); monitorGain.gain.value = 1.0;
-            sourceMedia._audioSource.connect(monitorGain); monitorGain.connect(actx.destination);
+          let source = hasExtractedAudio ? extAudioEl : videoEl;
+          if (!source._audioSource) {
+            source._audioSource = actx = window._sharedAudioCtx.createMediaElementSource(source);
+            source._audioDest = window._sharedAudioCtx.createMediaStreamDestination();
+            source._audioSource.connect(source._audioDest);
+            source._audioSource.connect(window._sharedAudioCtx.destination);
           }
-          audioTrack = sourceMedia._audioDest.stream.getAudioTracks()[0];
-          sourceMedia.currentTime = 0; await sourceMedia.play().catch(()=>{});
+          audioTrack = source._audioDest.stream.getAudioTracks()[0];
+          source.currentTime = 0; await source.play().catch(()=>{});
         }
       } catch (e) {}
 
       if (currentMediaType === 'video') { videoEl.currentTime = 0; await videoEl.play().catch(()=>{}); }
 
-      const canvasStream = renderCanvas.captureStream(25);
-      let combinedStream = canvasStream;
-      if (audioTrack) { combinedStream = new MediaStream([canvasStream.getVideoTracks()[0], audioTrack]); }
-
-      const mimeType = pickBestMimeType();
-      let recorder;
-      try { recorder = new MediaRecorder(combinedStream, { mimeType: mimeType, videoBitsPerSecond: 5000000 }); } 
-      catch (e) { progressBanner.classList.add('hidden'); return; }
-
+      const stream = renderCanvas.captureStream(25);
+      const combined = audioTrack ? new MediaStream([stream.getVideoTracks()[0], audioTrack]) : stream;
+      const recorder = new MediaRecorder(combined, { mimeType: 'video/mp4', videoBitsPerSecond: 5000000 });
       const chunks = [];
-      recorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
-      const startTime = performance.now(); recorder.start();
-
-      function drawFrame() {
-        const elapsed = performance.now() - startTime;
-        const progress = Math.min(elapsed / recordDurationMs, 1);
-        progressBar.style.width = (progress * 100).toFixed(0) + '%';
-        percentEl.textContent = Math.round(progress * 100) + '%';
-
-        if(currentMediaType === 'video') { drawImageCover(ctx, videoEl, width, height); } 
-        else { drawImageCover(ctx, document.getElementById('cardImageBg'), width, height); }
-
-        const gradient = ctx.createLinearGradient(0, 0, 0, height);
-        gradient.addColorStop(0, 'rgba(0,0,0,0.4)'); gradient.addColorStop(0.3, 'rgba(0,0,0,0.0)');
-        gradient.addColorStop(0.7, 'rgba(0,0,0,0.0)'); gradient.addColorStop(1, 'rgba(0,0,0,0.7)');
-        ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
+      recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+      
+      const start = performance.now(); recorder.start();
+      function draw() {
+        const elapsed = performance.now() - start;
+        progressBar.style.width = `${Math.min((elapsed/duration)*100, 100)}%`;
+        if (currentMediaType === 'video') drawImageCover(ctx, videoEl, width, height);
+        else drawImageCover(ctx, document.getElementById('cardImageBg'), width, height);
 
         ctx.drawImage(overlayCanvas, 0, 0, width, height);
-
-        if (elapsed < recordDurationMs) { requestAnimationFrame(drawFrame); } else { recorder.stop(); }
+        if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
       }
-      requestAnimationFrame(drawFrame);
+      requestAnimationFrame(draw);
 
       recorder.onstop = () => {
-        progressBanner.classList.add('hidden');
-        const recordedBlob = new Blob(chunks, { type: mimeType });
-        const file = new File([recordedBlob], `daily-story-${Date.now()}.mp4`, { type: mimeType });
-        showVideoPreviewModal(URL.createObjectURL(recordedBlob), file, mimeType, recordDurationMs);
+        pb.classList.add('hidden');
+        const blob = new Blob(chunks, { type: 'video/mp4' });
+        showVideoPreviewModal(URL.createObjectURL(blob), new File([blob], `story.mp4`, { type: 'video/mp4' }));
       };
+    }
+
+    function drawImageCover(ctx, media, w, h) {
+      const mw = media.videoWidth || media.naturalWidth || media.width;
+      const mh = media.videoHeight || media.naturalHeight || media.height;
+      if (!mw || !mh) return;
+      const s = Math.max(w / mw, h / mh);
+      ctx.drawImage(media, (w - mw * s) / 2, (h - mh * s) / 2, mw * s, mh * s);
     }
 
     function showImagePreviewModal(url, file) {
-      document.getElementById('formatBadge').textContent = 'PNG';
       document.getElementById('resultVideoPlayer').classList.add('hidden');
-      const imgPreview = document.getElementById('resultImagePreview');
-      imgPreview.src = url; imgPreview.classList.remove('hidden');
-      setupDownloadShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
+      const img = document.getElementById('resultImagePreview'); img.src = url; img.classList.remove('hidden');
+      setupShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
     }
     
-    function showVideoPreviewModal(url, file, mimeType, durationMs) {
-      document.getElementById('formatBadge').textContent = `MP4 (${(durationMs/1000).toFixed(1)}s)`;
+    function showVideoPreviewModal(url, file) {
       document.getElementById('resultImagePreview').classList.add('hidden');
-      const previewVideo = document.getElementById('resultVideoPlayer');
-      previewVideo.src = url; previewVideo.muted = false; previewVideo.classList.remove('hidden');
-      previewVideo.play().catch(()=>{});
-      setupDownloadShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
+      const v = document.getElementById('resultVideoPlayer'); v.src = url; v.classList.remove('hidden');
+      v.play().catch(()=>{}); setupShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
     }
 
-    function setupDownloadShare(file) {
+    function setupShare(file) {
       document.getElementById('shareVideoBtn').onclick = async () => {
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            try { await navigator.share({ files: [file], title: 'بطاقة اليوم' }); } catch(e) {}
-        } else { downloadBlobDirectly(file, file.name); }
+        if (navigator.share && navigator.canShare({ files: [file] })) {
+            try { await navigator.share({ files: [file] }); } catch(e) {}
+        } else {
+            const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+        }
       };
     }
-
-    function downloadBlobDirectly(blobOrFile, filename) {
-      const url = URL.createObjectURL(blobOrFile);
-      const a = document.createElement('a'); a.href = url; a.download = filename;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    }
-    function closeVideoPreview() {
-      try { document.getElementById('resultVideoPlayer').pause(); } catch(e){}
-      document.getElementById('resultVideoPlayer').src = '';
-      document.getElementById('videoPreviewModal').classList.add('hidden');
-    }
+    function closeVideoPreview() { document.getElementById('videoPreviewModal').classList.add('hidden'); }
   </script>
 </body>
 </html>
