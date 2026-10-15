@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>بطاقة اليوم الذكية | الأذكار ومواقيت الصلاة والطقس</title>
+  
+  <!-- خطوط عربية متناسقة تدعم التوسيط -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,700&family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- مكتبات التصيير والأيقونات -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+    }
+    .font-quran {
+      font-family: 'Amiri', serif;
+    }
+    .font-cairo {
+      font-family: 'Cairo', sans-serif;
+    }
+
+    /* إصلاح تقطع الحروف والتوسيط بالبكسل */
+    .arabic-clean {
+      letter-spacing: normal !important;
+      word-spacing: normal !important;
+      font-feature-settings: "kern" 1, "liga" 1;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.25;
+    }
+
+    /* زجاجي Glassmorphism فاخر */
+    .glass-panel {
+      background: rgba(18, 24, 38, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    .glass-pill {
+      background: rgba(22, 30, 46, 0.68);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* معاينة بطاقة الآيفون بمقاس القصة 9:16 */
+    #storyCard {
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      max-width: 390px;
+    }
+
+    /* إخفاء شريط التمرير */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* أنيميشن التحميل */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .animate-subtle {
+      animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 flex flex-col items-center">
+
+  <!-- شريط العنوان العلوي -->
+  <header class="w-full max-w-4xl flex items-center justify-between pb-5 border-b border-slate-800 mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <i class="fa-solid fa-moon text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-lg md:text-xl font-bold font-cairo text-white">بطاقة اليوم الذكية</h1>
+        <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم لمشاركتها مباشرة لألبوم الصور</p>
+      </div>
+    </div>
+    
+    <button onclick="toggleGithubModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 flex items-center gap-1.5 transition">
+      <i class="fa-brands fa-github text-sm"></i>
+      <span>ربط GitHub</span>
+    </button>
+  </header>
+
+  <!-- الحاوية الرئيسية (لوحة التحكم + بطاقة المعاينة) -->
+  <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- قسم التحكم والإعدادات -->
+    <div class="lg:col-span-6 space-y-4">
+      <div class="glass-panel rounded-2xl p-5 space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> خيارات وإعدادات البطاقة
+          </h2>
+          <span class="text-[11px] text-slate-400">تحديث فوري للمعاينة</span>
+        </div>
+
+        <!-- 1. اسم المدينة ومربع الاختيار -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-rose-400"></i> اسم المدينة
+            </label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="cityToggle" checked onchange="toggleElement('cityContainer', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2">
+            <select id="citySelect" onchange="onCityChanged(this.value)" class="col-span-2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+              <option value="Jeddah" selected>جدة (السعودية)</option>
+              <option value="Riyadh">الرياض (السعودية)</option>
+              <option value="Makkah">مكة المكرمة (السعودية)</option>
+              <option value="Madinah">المدينة المنورة (السعودية)</option>
+              <option value="Dammam">الدمام (السعودية)</option>
+              <option value="Cairo">القاهرة (مصر)</option>
+              <option value="Dubai">دبي (الإمارات)</option>
+              <option value="Kuwait City">الكويت (الكويت)</option>
+              <option value="Doha">الدوحة (قطر)</option>
+            </select>
+            <button onclick="detectLocationSilent()" id="locateBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs py-2 px-2 flex items-center justify-center gap-1.5 transition">
+              <i class="fa-solid fa-location-crosshairs text-amber-400"></i>
+              <span>موقعي</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. حالة الطقس ومربع الاختيار -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-cloud-sun text-amber-400"></i> حالة الطقس
+            </label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="weatherToggle" checked onchange="toggleElement('weatherContainer', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+            <span id="weatherStatusText" class="text-slate-300">صافٍ تماماً (29°C)</span>
+            <button onclick="refreshWeatherData()" class="text-slate-400 hover:text-amber-400 transition flex items-center gap-1">
+              <i class="fa-solid fa-rotate text-[11px]"></i> تحديث
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. مواقيت الصلاة ومربع الاختيار -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-mosque text-emerald-400"></i> مواقيت الصلاة
+            </label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="prayersToggle" checked onchange="toggleElement('prayerScheduleBox', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+          <p class="text-[11px] text-slate-400">يتم جلب المواقيت اليومية وحساب الصلاة القادمة تلقائياً حسب مدينتك.</p>
+        </div>
+
+        <!-- 4. اختيار صورة أو فيديو أو التوليد الذكي -->
+        <div class="space-y-2.5 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-photo-film text-indigo-400"></i> خلفية البطاقة (صورة أو فيديو)
+            </label>
+            <div class="flex items-center gap-1 text-[11px] text-slate-400">
+              <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50">فيديو متحرك</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <!-- رفع من المستخدم -->
+            <label class="cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 p-3 rounded-xl flex flex-col items-center justify-center text-center transition group">
+              <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-lg mb-1 group-hover:scale-110 transition"></i>
+              <span class="text-xs font-medium text-slate-200">اختر من جهازك</span>
+              <span class="text-[10px] text-slate-400">صورة أو مقطع فيديو</span>
+              <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
+            </label>
+
+            <!-- التبديل للذكاء الاصطناعي -->
+            <button onclick="generateAiVisualTheme()" class="bg-slate-900 border border-slate-700 hover:border-indigo-500/60 p-3 rounded-xl flex flex-col items-center justify-center text-center transition group">
+              <i class="fa-solid fa-wand-magic-sparkles text-indigo-400 text-lg mb-1 group-hover:scale-110 transition"></i>
+              <span class="text-xs font-medium text-slate-200">توليد بالذكاء الاصطناعي</span>
+              <span class="text-[10px] text-slate-400">مناظر طبيعية وسينمائية</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. مربع نص الحكمة أو النصيحة -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-quote-right text-amber-400"></i> حكمة / نصيحة / آية (في الأعلى)
+            </label>
+            <button onclick="generateAiQuote()" class="text-amber-400 hover:text-amber-300 text-[11px] flex items-center gap-1">
+              <i class="fa-solid fa-sparkles"></i> اقتراح ذكي
+            </button>
+          </div>
+          <textarea id="quoteTextInput" rows="2" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"</textarea>
+        </div>
+
+      </div>
+
+      <!-- أزرار الإجراءات والحفظ في الآيفون -->
+      <div class="space-y-2">
+        <button id="saveMainBtn" onclick="initiateExport()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+          <i class="fa-solid fa-arrow-down-to-bracket text-base"></i>
+          <span id="saveBtnLabel">حفظ الفيديو في ألبوم الصور (آيفون)</span>
+        </button>
+        <p class="text-[11px] text-center text-slate-400">يفتح نافذة المشاركة الرسمية بنظام iOS لاختيار "حفظ الفيديو" أو "حفظ الصورة" مباشرة للكاميرا.</p>
+      </div>
+
+    </div>
+
+    <!-- قسم المعاينة المباشرة (بطاقة الآيفون 9:16) -->
+    <div class="lg:col-span-6 flex flex-col items-center">
+      
+      <!-- إطار الآيفون الخارجي -->
+      <div class="relative w-full max-w-[340px] md:max-w-[370px] rounded-[44px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl">
+        
+        <!-- الجزيرة التفاعلية (Dynamic Island) -->
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-30 pointer-events-none"></div>
+
+        <!-- الحاوية القابلة للتصيير (Story Canvas Container) -->
+        <div id="storyCard" class="relative rounded-[36px] overflow-hidden flex flex-col justify-between p-4 bg-black select-none text-white shadow-inner">
+          
+          <!-- عنصر الفيديو الحي للخلفية -->
+          <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0" playsinline webkit-playsinline muted loop autoplay crossorigin="anonymous">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-bird-on-a-branch-at-sunset-41484-large.mp4" type="video/mp4">
+          </video>
+          
+          <!-- عنصر الصورة الحي للخلفية (مخفي افتراضياً عند وجود فيديو) -->
+          <img id="cardImageBg" class="absolute inset-0 w-full h-full object-cover z-0 hidden" crossorigin="anonymous" alt="خلفية البطاقة">
+
+          <!-- غطاء تدرج ضوئي سينمائي ناعم -->
+          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
+
+          <!-- ==============================
+               القسم العلوي: التاريخ والحكمة
+               ============================== -->
+          <div class="relative z-10 w-full space-y-2.5 pt-4">
+            
+            <!-- مستطيل التاريخ الهجري والميلادي مع التوسيط العمودي الدقيق -->
+            <div id="dateBar" class="glass-pill rounded-full px-4 h-8 flex items-center justify-between text-[11px] font-medium text-amber-300">
+              <!-- اليمين: هجري -->
+              <div class="flex items-center gap-1 h-full">
+                <span id="hijriDateText" class="arabic-clean flex items-center">٤ جمادى الأولى ١٤٤٨ هـ</span>
+              </div>
+              
+              <span class="text-amber-400/80 text-[10px]">✦</span>
+
+              <!-- اليسار: ميلادي -->
+              <div class="flex items-center gap-1 h-full">
+                <span id="gregorianDateText" class="arabic-clean flex items-center">١٥ أكتوبر ٢٠٢٦ م</span>
+              </div>
+            </div>
+
+            <!-- مستطيل الحكمة أو النصيحة (أعلى الصورة فقط بدون عبارات إضافية) -->
+            <div id="quoteCardBox" class="glass-panel rounded-2xl p-3.5 text-center border border-white/10">
+              <p id="quoteTextDisplay" class="font-quran text-lg md:text-xl text-amber-100 font-bold leading-relaxed arabic-clean">
+                "سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"
+              </p>
+            </div>
+
+          </div>
+
+          <!-- مساحة مرنة وسطية تترك الطائر أو العنصر البصري واضحاً تماماً دون أي حجب -->
+          <div class="flex-grow min-h-[140px] pointer-events-none"></div>
+
+          <!-- ==============================
+               القسم السفلي: الطقس، المدينة، ومواقيت الصلاة
+               ============================== -->
+          <div class="relative z-10 w-full space-y-2.5 pb-2">
+            
+            <!-- صف المدينة والطقس جنباً إلى جنب -->
+            <div class="grid grid-cols-2 gap-2">
+              
+              <!-- بطاقة المدينة -->
+              <div id="cityContainer" class="glass-panel rounded-xl p-2.5 flex items-center justify-between border border-white/10">
+                <div class="text-right">
+                  <span class="text-[10px] text-slate-400 block font-cairo">المدينة</span>
+                  <span id="cityNameDisplay" class="text-xs font-bold text-white arabic-clean">جدة</span>
+                </div>
+                <div class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 text-xs">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+              </div>
+
+              <!-- بطاقة الطقس -->
+              <div id="weatherContainer" class="glass-panel rounded-xl p-2.5 flex items-center justify-between border border-white/10">
+                <div class="text-right">
+                  <span id="weatherDescDisplay" class="text-[10px] text-slate-400 block font-cairo arabic-clean">صافٍ تماماً</span>
+                  <span id="tempDisplay" class="text-xs font-bold text-white arabic-clean">29°C</span>
+                </div>
+                <div id="weatherIconBox" class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs">
+                  <i class="fa-solid fa-sun"></i>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- بطاقة مواقيت الصلاة اليومية -->
+            <div id="prayerScheduleBox" class="glass-panel rounded-2xl p-3 border border-white/10 space-y-2">
+              
+              <div class="flex items-center justify-between pb-1.5 border-b border-white/10 text-[11px]">
+                <div class="flex items-center gap-1.5 font-bold text-white font-cairo">
+                  <i class="fa-solid fa-mosque text-emerald-400 text-xs"></i>
+                  <span>مواقيت الصلاة اليوم</span>
+                </div>
+                <div id="nextPrayerBadge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-medium arabic-clean">
+                  القادمة: الفجر
+                </div>
+              </div>
+
+              <!-- جدول أوقات الصلوات الخمس بالتوسيط العمودي -->
+              <div class="grid grid-cols-5 gap-1 text-center font-cairo">
+                
+                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                  <span class="text-[10px] text-slate-300">الفجر</span>
+                  <span id="timeFajr" class="text-[11px] font-bold text-amber-300 mt-0.5">05:03</span>
+                </div>
+
+                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                  <span class="text-[10px] text-slate-300">الظهر</span>
+                  <span id="timeDhuhr" class="text-[11px] font-bold text-amber-300 mt-0.5">12:09</span>
+                </div>
+
+                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                  <span class="text-[10px] text-slate-300">العصر</span>
+                  <span id="timeAsr" class="text-[11px] font-bold text-amber-300 mt-0.5">15:30</span>
+                </div>
+
+                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                  <span class="text-[10px] text-slate-300">المغرب</span>
+                  <span id="timeMaghrib" class="text-[11px] font-bold text-amber-300 mt-0.5">17:59</span>
+                </div>
+
+                <div class="bg-white/5 rounded-lg py-1.5 px-0.5 border border-white/5 flex flex-col justify-center items-center">
+                  <span class="text-[10px] text-slate-300">العشاء</span>
+                  <span id="timeIsha" class="text-[11px] font-bold text-amber-300 mt-0.5">19:29</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- نافذة التجهيز المباشر للحفظ على iOS (Modal for User-Gesture on Safari) -->
+  <div id="exportActionModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-5 text-center space-y-4 shadow-2xl">
+      <div class="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white font-cairo">البطاقة جاهزة للحفظ</h3>
+        <p class="text-xs text-slate-400 mt-1">اضغط الزر بالأسفل لفتح قائمة المشاركة ثم اختر <span class="text-amber-400 font-bold">"حفظ الفيديو / Save Video"</span></p>
+      </div>
+
+      <!-- معاينة سريعة للفيديو المصدر -->
+      <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-52 mx-auto border border-white/10">
+        <video id="readyPreviewVideo" class="w-full h-full object-cover" controls playsinline autoplay loop muted></video>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button id="triggerIosShareBtn" onclick="executeNativeIosShare()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs font-cairo shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-share-from-square"></i> فتح نافذة الحفظ بالآيفون (Photos)
+        </button>
+        <button onclick="closeExportModal()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة تقدم المعالجة والتسجيل -->
+  <div id="recordingProgressOverlay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4 text-center">
+    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl mb-4 animate-bounce">
+      <i class="fa-solid fa-film"></i>
+    </div>
+    <h3 class="text-base font-bold text-white font-cairo mb-1">جاري تسجيل حركة الفيديو والبطاقات...</h3>
+    <p class="text-xs text-slate-400 max-w-xs mb-4">يتم التقاط حركة الطائر والأغصان فريماً بفريم بأعلى دقة</p>
+    
+    <div class="w-64 bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+      <div id="recordingProgressBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-0 transition-all duration-150"></div>
+    </div>
+    <span id="recordingProgressText" class="text-xs text-amber-400 font-mono mt-2">0%</span>
+  </div>
+
+  <!-- نافذة GitHub وربط المشروع -->
+  <div id="githubModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2 font-cairo">
+          <i class="fa-brands fa-github text-amber-400"></i> خطوات ربط المشروع في GitHub ورفع الموقع
+        </h3>
+        <button onclick="toggleGithubModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+        <p>يمكنك استضافة هذا التطبيق مجاناً وبنقرة واحدة عبر <strong>GitHub Pages</strong> كالتالي:</p>
+        
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-[11px] text-amber-300/90" dir="ltr">
+          <p class="text-slate-500"># 1. إنشاء مستودع جديد ورفع الملف</p>
+          <p>git init</p>
+          <p>git add index.html</p>
+          <p>git commit -m "إطلاق تطبيق بطاقة اليوم الذكية"</p>
+          <p>git branch -M main</p>
+          <p>git remote add origin https://github.com/USERNAME/REPO_NAME.git</p>
+          <p>git push -u origin main</p>
+        </div>
+
+        <ol class="list-decimal list-inside space-y-1.5 text-slate-300 text-[12px]">
+          <li>احفظ هذا الكود كملف وحيد باسم <code class="text-amber-300">index.html</code>.</li>
+          <li>ادخل على إعدادات المستودع في GitHub (<strong class="text-white">Settings</strong>).</li>
+          <li>من القائمة الجانبية اختر <strong class="text-white">Pages</strong>.</li>
+          <li>تحت قسم <strong>Branch</strong> اختر <strong class="text-emerald-400">main</strong> واضغط <strong>Save</strong>.</li>
+          <li>سيصبح التطبيق متاحاً فوراً على رابط مجاني يدعم متصفح سفاري للآيفون!</li>
+        </ol>
+      </div>
+
+      <button onclick="toggleGithubModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">
+        إغلاق
+      </button>
+    </div>
+  </div>
+
+  <!-- منطق التطبيق البرمجي الشامل -->
+  <script>
+    // حالة التطبيق
+    let currentMediaType = 'video'; // 'video' أو 'image'
+    let currentGeneratedFile = null;
+    let currentCity = 'Jeddah';
+
+    // قاموس تعريب المدن
+    const cityArabicNames = {
+      'Jeddah': 'جدة',
+      'Riyadh': 'الرياض',
+      'Makkah': 'مكة المكرمة',
+      'Madinah': 'المدينة المنورة',
+      'Dammam': 'الدمام',
+      'Cairo': 'القاهرة',
+      'Dubai': 'دبي',
+      'Kuwait City': 'الكويت',
+      'Doha': 'الدوحة'
+    };
+
+    // إحداثيات المدن المبدئية
+    const cityCoordinates = {
+      'Jeddah': { lat: 21.5433, lng: 39.1728 },
+      'Riyadh': { lat: 24.7136, lng: 46.6753 },
+      'Makkah': { lat: 21.3891, lng: 39.8579 },
+      'Madinah': { lat: 24.5247, lng: 39.5692 },
+      'Dammam': { lat: 26.4207, lng: 50.0888 },
+      'Cairo': { lat: 30.0444, lng: 31.2357 },
+      'Dubai': { lat: 25.2048, lng: 55.2708 },
+      'Kuwait City': { lat: 29.3759, lng: 47.9774 },
+      'Doha': { lat: 25.2854, lng: 51.5310 }
+    };
+
+    // قائمة حِكم وأدعية ذكية
+    const inspirationalQuotes = [
+      '"سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا"',
+      '"وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ"',
+      '"إِنَّ مَعَ الْعُسْرِ يُسْرًا"',
+      '"فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ"',
+      '"وَاصْبِرْ لِحُكْمِ رَبِّكَ فَإِنَّكَ بِأَعْيُنِنَا"',
+      '"أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"',
+      '"اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ وَفَتْحَهُ وَنَصْرَهُ وَنُورَهُ وَبَرَكَتَهُ"',
+      '"حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ"'
+    ];
+
+    // خلفيات ذكاء اصطناعي سينمائية
+    const aiVisualThemes = [
+      { type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-bird-on-a-branch-at-sunset-41484-large.mp4', title: 'غروب الشمس الهادئ وحركة الطائر' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1080&q=80', title: 'شاطئ البحر الهادئ عند الشروق' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1080&q=80', title: 'قمم الجبال المهيبة وسط السحاب' },
+      { type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-sun-setting-over-the-mountains-41482-large.mp4', title: 'غروب ذهبي خلف الجبال' }
+    ];
+
+    // عند تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', () => {
+      formatArabicDates();
+      fetchPrayers(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
+      fetchWeather(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
+    });
+
+    // 1. توليد وتنسيق التاريخ الهجري والميلادي بدقة
+    function formatArabicDates() {
+      const now = new Date();
+      
+      // ميلادي
+      const gregorianFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      const gregFormatted = gregorianFormatter.format(now).replace('هـ', '').trim() + ' م';
+      document.getElementById('gregorianDateText').textContent = gregFormatted;
+
+      // هجري نظيف تماماً بحرف هـ واحد
+      try {
+        const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+        let hijriRaw = hijriFormatter.format(now);
+        hijriRaw = hijriRaw.replace(/هـ/g, '').replace(/AH/g, '').trim();
+        document.getElementById('hijriDateText').textContent = hijriRaw + ' هـ';
+      } catch (e) {
+        document.getElementById('hijriDateText').textContent = '٤ جمادى الأولى ١٤٤٨ هـ';
+      }
+    }
+
+    // 2. جلب مواقيت الصلاة بدقة
+    async function fetchPrayers(lat, lng) {
+      try {
+        const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=4`);
+        const data = await res.json();
+        if (data.code === 200) {
+          const t = data.data.timings;
+          document.getElementById('timeFajr').textContent = t.Fajr.substring(0, 5);
+          document.getElementById('timeDhuhr').textContent = t.Dhuhr.substring(0, 5);
+          document.getElementById('timeAsr').textContent = t.Asr.substring(0, 5);
+          document.getElementById('timeMaghrib').textContent = t.Maghrib.substring(0, 5);
+          document.getElementById('timeIsha').textContent = t.Isha.substring(0, 5);
+          calculateNextPrayer(t);
+        }
+      } catch (err) {
+        console.warn('استخدام مواقيت احتياطية:', err);
+      }
+    }
+
+    // تحديد الصلاة القادمة
+    function calculateNextPrayer(timings) {
+      const prayers = [
+        { name: 'الفجر', time: timings.Fajr },
+        { name: 'الظهر', time: timings.Dhuhr },
+        { name: 'العصر', time: timings.Asr },
+        { name: 'المغرب', time: timings.Maghrib },
+        { name: 'العشاء', time: timings.Isha }
+      ];
+
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      for (let p of prayers) {
+        const [h, m] = p.time.split(':').map(Number);
+        if (h * 60 + m > currentMinutes) {
+          document.getElementById('nextPrayerBadge').textContent = `القادمة: ${p.name}`;
+          return;
+        }
+      }
+      document.getElementById('nextPrayerBadge').textContent = `القادمة: الفجر`;
+    }
+
+    // 3. جلب الطقس المباشر
+    async function fetchWeather(lat, lng) {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          const code = data.current_weather.weathercode;
+          const status = getWeatherArabic(code);
+          
+          document.getElementById('tempDisplay').textContent = `${temp}°C`;
+          document.getElementById('weatherDescDisplay').textContent = status.text;
+          document.getElementById('weatherStatusText').textContent = `${status.text} (${temp}°C)`;
+          document.getElementById('weatherIconBox').innerHTML = `<i class="${status.icon}"></i>`;
+        }
+      } catch (err) {
+        console.warn('تعذر جلب الطقس المباشر:', err);
+      }
+    }
+
+    function getWeatherArabic(code) {
+      if (code === 0) return { text: 'صافٍ تماماً', icon: 'fa-solid fa-sun' };
+      if (code >= 1 && code <= 3) return { text: 'غائم جزئياً', icon: 'fa-solid fa-cloud-sun' };
+      if (code >= 45 && code <= 48) return { text: 'ضبابي لطيف', icon: 'fa-solid fa-smog' };
+      if (code >= 51 && code <= 67) return { text: 'أمطار خفيفة', icon: 'fa-solid fa-cloud-rain text-blue-400' };
+      if (code >= 80 && code <= 82) return { text: 'أمطار غزيرة', icon: 'fa-solid fa-cloud-showers-heavy text-blue-400' };
+      return { text: 'معتدل ولطيف', icon: 'fa-solid fa-cloud-sun' };
+    }
+
+    // 4. تغيير المدينة
+    function onCityChanged(cityName) {
+      currentCity = cityName;
+      const arabicName = cityArabicNames[cityName] || cityName;
+      document.getElementById('cityNameDisplay').textContent = arabicName;
+
+      const coords = cityCoordinates[cityName] || cityCoordinates['Jeddah'];
+      fetchPrayers(coords.lat, coords.lng);
+      fetchWeather(coords.lat, coords.lng);
+    }
+
+    // تحديد الموقع الصامت عبر IP دون رسائل أخطاء
+    async function detectLocationSilent() {
+      const btn = document.getElementById('locateBtn');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+      
+      try {
+        // جلب الإحداثيات والمدينة عبر عنوان IP بشكل موثوق على iOS و Safari
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data && data.latitude && data.longitude) {
+          let detectedCity = data.city || 'جدة';
+          const arabic = cityArabicNames[detectedCity] || detectedCity;
+          document.getElementById('cityNameDisplay').textContent = arabic;
+          fetchPrayers(data.latitude, data.longitude);
+          fetchWeather(data.latitude, data.longitude);
+        }
+      } catch (e) {
+        // إذا حجب الجدار الناري IP، يتم الرجوع لجدة تلقائياً بنعومة
+        onCityChanged('Jeddah');
+      } finally {
+        btn.innerHTML = `<i class="fa-solid fa-location-crosshairs text-amber-400"></i> <span>موقعي</span>`;
+      }
+    }
+
+    // تحديث الطقس يدوياً
+    function refreshWeatherData() {
+      const coords = cityCoordinates[currentCity] || cityCoordinates['Jeddah'];
+      fetchWeather(coords.lat, coords.lng);
+    }
+
+    // 5. التبديل وإخفاء العناصر عبر مفاتيح الـ Toggle
+    function toggleElement(elementId, isVisible) {
+      const el = document.getElementById(elementId);
+      if (isVisible) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+
+    // تحديث الحكمة فورياً
+    function updateCardQuote(text) {
+      document.getElementById('quoteTextDisplay').textContent = text.trim() || '""';
+    }
+
+    // اقتراح حكمة ذكية عشوائية
+    function generateAiQuote() {
+      const random = inspirationalQuotes[Math.floor(Math.random() * inspirationalQuotes.length)];
+      document.getElementById('quoteTextInput').value = random;
+      updateCardQuote(random);
+    }
+
+    // 6. التعامل مع رفع ملفات المستخدم (صورة أو فيديو)
+    function handleUserMediaUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const videoEl = document.getElementById('cardVideoBg');
+      const imgEl = document.getElementById('cardImageBg');
+
+      if (file.type.startsWith('video/')) {
+        currentMediaType = 'video';
+        const fileUrl = URL.createObjectURL(file);
+        videoEl.src = fileUrl;
+        videoEl.classList.remove('hidden');
+        imgEl.classList.add('hidden');
+        videoEl.play();
+        
+        document.getElementById('mediaTypeBadge').textContent = 'فيديو مخصص';
+        document.getElementById('saveBtnLabel').textContent = 'حفظ الفيديو في ألبوم الصور (آيفون)';
+      } else if (file.type.startsWith('image/')) {
+        currentMediaType = 'image';
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          imgEl.src = event.target.result;
+          imgEl.classList.remove('hidden');
+          videoEl.classList.add('hidden');
+          videoEl.pause();
+          
+          document.getElementById('mediaTypeBadge').textContent = 'صورة مخصصة';
+          document.getElementById('saveBtnLabel').textContent = 'حفظ الصورة في ألبوم الصور (آيفون)';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // توليد خلفية ذكاء اصطناعي
+    let aiIndex = 0;
+    function generateAiVisualTheme() {
+      aiIndex = (aiIndex + 1) % aiVisualThemes.length;
+      const theme = aiVisualThemes[aiIndex];
+      const videoEl = document.getElementById('cardVideoBg');
+      const imgEl = document.getElementById('cardImageBg');
+
+      if (theme.type === 'video') {
+        currentMediaType = 'video';
+        videoEl.src = theme.url;
+        videoEl.classList.remove('hidden');
+        imgEl.classList.add('hidden');
+        videoEl.play();
+        document.getElementById('mediaTypeBadge').textContent = 'فيديو بالذكاء الاصطناعي';
+        document.getElementById('saveBtnLabel').textContent = 'حفظ الفيديو في ألبوم الصور (آيفون)';
+      } else {
+        currentMediaType = 'image';
+        imgEl.src = theme.url;
+        imgEl.classList.remove('hidden');
+        videoEl.classList.add('hidden');
+        videoEl.pause();
+        document.getElementById('mediaTypeBadge').textContent = 'صورة بالذكاء الاصطناعي';
+        document.getElementById('saveBtnLabel').textContent = 'حفظ الصورة في ألبوم الصور (آيفون)';
+      }
+    }
+
+    // ==============================================================
+    // 7. محرك التصدير والتسجيل الذكي المخصص لـ iOS (بدون تجميد الفيديو)
+    // ==============================================================
+    async function initiateExport() {
+      if (currentMediaType === 'image') {
+        await exportStaticImage();
+      } else {
+        await exportMotionVideo();
+      }
+    }
+
+    // تصدير الصورة الثابتة
+    async function exportStaticImage() {
+      const card = document.getElementById('storyCard');
+      const progressOverlay = document.getElementById('recordingProgressOverlay');
+      progressOverlay.classList.remove('hidden');
+      document.getElementById('recordingProgressText').textContent = 'جاري التقاط الصورة...';
+
+      try {
+        await document.fonts.ready;
+        const canvas = await html2canvas(card, {
+          scale: 3,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#000000'
+        });
+
+        canvas.toBlob(async (blob) => {
+          progressOverlay.classList.add('hidden');
+          const file = new File([blob], `daily-card-${Date.now()}.png`, { type: 'image/png' });
+          currentGeneratedFile = file;
+
+          // المشاركة المباشرة لآيفون
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'بطاقة اليوم',
+            });
+          } else {
+            // تحميل بديل
+            downloadBlobDirectly(blob, 'daily-card.png');
+          }
+        }, 'image/png');
+
+      } catch (err) {
+        progressOverlay.classList.add('hidden');
+        alert('تعذر تصدير الصورة: ' + err.message);
+      }
+    }
+
+    // تصدير مقطع الفيديو المتحرك فريماً بفريم مع طبقات النصوص
+    async function exportMotionVideo() {
+      const videoEl = document.getElementById('cardVideoBg');
+      const card = document.getElementById('storyCard');
+      const progressOverlay = document.getElementById('recordingProgressOverlay');
+      const progressBar = document.getElementById('recordingProgressBar');
+      const progressText = document.getElementById('recordingProgressText');
+
+      progressOverlay.classList.remove('hidden');
+      progressBar.style.width = '5%';
+      progressText.textContent = 'تجهيز أبعاد الفيديو...';
+
+      // 1. تحضير طبقة الواجهة والنصوص كصورة شفافة مدمجة مرة واحدة بدقة فائقة
+      videoEl.style.opacity = '0'; // إخفاء الفيديو مؤقتاً لالتقاط بطاقات النصوص والمواقيت فقط
+      await document.fonts.ready;
+      
+      const overlayCanvas = await html2canvas(card, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
+      videoEl.style.opacity = '1';
+
+      // 2. إنشاء لوحة الكانفاس المدمجة للأبعاد 9:16
+      const width = 720;
+      const height = 1280;
+      const renderCanvas = document.createElement('canvas');
+      renderCanvas.width = width;
+      renderCanvas.height = height;
+      const ctx = renderCanvas.getContext('2d');
+
+      // 3. إعادة تشغيل الفيديو من البداية لضمان تسجيل كامل حركته
+      videoEl.currentTime = 0;
+      await videoEl.play();
+
+      // إنشاء تيار التسجيل بمعدل 30 إطاراً في الثانية
+      const stream = renderCanvas.captureStream(30);
+      
+      let mimeType = 'video/mp4';
+      if (!MediaRecorder.isTypeSupported('video/mp4')) {
+        mimeType = MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1' : 'video/webm';
+      }
+
+      const recorder = new MediaRecorder(stream, {
+        mimeType: mimeType,
+        videoBitsPerSecond: 4500000 // 4.5 Mbps لجودة نقية
+      });
+
+      const chunks = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      const recordDurationMs = 5000; // تسجيل 5 ثوانٍ من الحركة الكاملة
+      const startTime = performance.now();
+      recorder.start();
+
+      // حلقة رسم الإطارات الحية
+      function drawFrame() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(Math.round((elapsed / recordDurationMs) * 100), 100);
+        
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${progress}%`;
+
+        // رسم إطار الفيديو المتحرك الحي
+        if (!videoEl.paused && !videoEl.ended) {
+          ctx.drawImage(videoEl, 0, 0, width, height);
+        }
+
+        // رسم طبقة التدرج وتعتيم النصوص
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, 'rgba(0,0,0,0.6)');
+        gradient.addColorStop(0.5, 'rgba(0,0,0,0.0)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // رسم طبقة الحكمة والمواقيت والطقس فوق الفيديو
+        ctx.drawImage(overlayCanvas, 0, 0, width, height);
+
+        if (elapsed < recordDurationMs) {
+          requestAnimationFrame(drawFrame);
+        } else {
+          recorder.stop();
+        }
+      }
+
+      requestAnimationFrame(drawFrame);
+
+      recorder.onstop = () => {
+        progressOverlay.classList.add('hidden');
+        const recordedBlob = new Blob(chunks, { type: mimeType });
+        const file = new File([recordedBlob], `daily-story-${Date.now()}.mp4`, { type: 'video/mp4' });
+        currentGeneratedFile = file;
+
+        // تجهيز نافذة المعاينة واللمسة المباشرة لنظام iOS
+        const previewVideo = document.getElementById('readyPreviewVideo');
+        previewVideo.src = URL.createObjectURL(recordedBlob);
+        document.getElementById('exportActionModal').classList.remove('hidden');
+      };
+    }
+
+    // فتح نافذة المشاركة الأصلية لنظام iOS بنقرة المستخدم المباشرة
+    async function executeNativeIosShare() {
+      if (!currentGeneratedFile) return;
+
+      try {
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [currentGeneratedFile] })) {
+          await navigator.share({
+            files: [currentGeneratedFile],
+            title: 'بطاقة اليوم الذكية'
+          });
+          closeExportModal();
+        } else {
+          // تنزيل مباشر إذا لم تكن مدعومة
+          downloadBlobDirectly(currentGeneratedFile, currentGeneratedFile.name);
+          closeExportModal();
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          downloadBlobDirectly(currentGeneratedFile, currentGeneratedFile.name);
+        }
+      }
+    }
+
+    function downloadBlobDirectly(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportActionModal').classList.add('hidden');
+    }
+
+    function toggleGithubModal() {
+      const modal = document.getElementById('githubModal');
+      modal.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
