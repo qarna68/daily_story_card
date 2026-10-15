@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>بطاقة اليوم الذكية - النسخة الإبداعية</title>
+  <title>بطاقة اليوم الذكية - النسخة الملكية</title>
   
   <!-- مكتبة الخطوط العربية والإنجليزية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,11 +49,11 @@
       box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.37);
     }
     
-    .glass-pill {
-      background: rgba(22, 30, 46, 0.72);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .top-overlay-bg {
+      background-color: rgba(0, 0, 0, 0.4); /* القيمة الافتراضية للبروز */
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     #storyCard {
@@ -74,35 +74,6 @@
     .delay-2 { animation-delay: 0.2s; opacity: 0; }
     
     #phoneContainer { transition: box-shadow 0.8s ease-in-out; }
-
-    /* أنيميشن موجة الصوت (Mini Player) */
-    .sound-wave {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      height: 12px;
-    }
-    .sound-bar {
-      width: 3px;
-      background-color: #fcd34d; /* لون amber-300 */
-      border-radius: 2px;
-      animation: wave 1s infinite alternate ease-in-out;
-    }
-    .sound-bar:nth-child(1) { animation-delay: 0.1s; height: 4px; }
-    .sound-bar:nth-child(2) { animation-delay: 0.3s; height: 8px; }
-    .sound-bar:nth-child(3) { animation-delay: 0.5s; height: 12px; }
-    .sound-bar:nth-child(4) { animation-delay: 0.2s; height: 6px; }
-    
-    @keyframes wave {
-      0% { height: 3px; }
-      100% { height: 12px; }
-    }
-    
-    /* إيقاف موجة الصوت إذا لم يكن هناك تشغيل */
-    .sound-wave.paused .sound-bar {
-        animation: none;
-        height: 3px !important;
-    }
   </style>
 </head>
 <body class="min-h-screen p-3 md:p-6 flex flex-col items-center">
@@ -116,25 +87,77 @@
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">
           بطاقة اليوم <span id="dynamicGreeting" class="text-amber-400 text-sm font-normal"></span>
         </h1>
-        <p class="text-xs text-slate-400">حكمة اليوم، الهدف، وموسيقى مخصصة بطابع سينمائي</p>
+        <p class="text-xs text-slate-400">حكمة، أحداث تاريخية، وصوت مدمج باحترافية</p>
       </div>
     </div>
   </header>
 
   <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     
-    <!-- قسم الإعدادات والخيارات -->
+    <!-- ================== قسم الإعدادات ================== -->
     <div class="lg:col-span-6 space-y-4 animate-fade-up delay-1">
       <div class="glass-panel rounded-2xl p-5 space-y-4">
         
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-            <i class="fa-solid fa-sliders"></i> إعدادات البطاقة المخصصة
+            <i class="fa-solid fa-sliders"></i> لوحة التحكم بالبطاقة
           </h2>
         </div>
 
-        <!-- 1. الحكمة أو الدعاء (النص الأوسط) -->
-        <div class="space-y-2">
+        <!-- 1. إزاحة النصوص العلوية وتعتيم الخلفية -->
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800/80 space-y-3">
+          <!-- الإزاحة الرأسية -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="text-slate-300 font-medium flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-up-down text-amber-400 text-[11px]"></i> إزاحة (التاريخ والحقوق) رأسياً
+              </span>
+              <span id="dateOffsetValue" class="text-amber-400 font-mono text-[11px]">0px</span>
+            </div>
+            <input type="range" id="dateOffsetSlider" min="-15" max="30" value="0" step="1" oninput="adjustDateOffset(this.value)" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
+          </div>
+          
+          <!-- بروز الخلفية (التعتيم) -->
+          <div class="pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="text-slate-300 font-medium flex items-center gap-1.5">
+                <i class="fa-solid fa-fill-drip text-indigo-400 text-[11px]"></i> بروز وتعتيم خلفية (التاريخ والحقوق)
+              </span>
+              <span id="topBgOpacityValue" class="text-indigo-400 font-mono text-[11px]">40%</span>
+            </div>
+            <input type="range" min="0" max="100" value="40" step="5" oninput="updateTopBgOpacity(this.value)" class="w-full accent-indigo-500 cursor-pointer h-1.5 bg-slate-700 rounded-lg">
+          </div>
+        </div>
+
+        <!-- 2. حقوق التصميم (الجهة اليسرى) -->
+        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-signature text-purple-400"></i> حقوق التصميم (اليسار)
+            </label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="watermarkToggle" checked onchange="toggleElement('watermarkBoxOverlay', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="watermarkTextInput" value="تصميم: @SAB3-77" oninput="updateWatermarkText(this.value)" placeholder="نص الحقوق" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
+            <select onchange="updateWatermarkFont(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400">
+              <option value="font-cairo" selected>Cairo (عصري)</option>
+              <option value="font-cinzel">Cinzel (كلاسيكي)</option>
+              <option value="font-signature">Great Vibes (توقيع)</option>
+              <option value="font-tajawal">Tajawal (بسيط)</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-3 gap-2 pt-1 text-[11px]">
+            <div><span class="text-slate-400 block mb-0.5">الشفافية: <span id="wmOpacityVal" class="text-purple-300">100%</span></span><input type="range" min="15" max="100" value="100" oninput="updateWatermarkOpacity(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer"></div>
+            <div><span class="text-slate-400 block mb-0.5">الحجم: <span id="wmSizeVal" class="text-purple-300">11px</span></span><input type="range" min="8" max="18" value="11" oninput="updateWatermarkSize(this.value)" class="w-full accent-purple-400 h-1 bg-slate-700 rounded cursor-pointer"></div>
+            <div><span class="text-slate-400 block mb-0.5">اللون</span><select onchange="updateWatermarkColor(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-1 py-1 text-[11px] text-white"><option value="#ffffff">أبيض</option><option value="#fcd34d">ذهبي</option><option value="#cbd5e1">فضي</option></select></div>
+          </div>
+        </div>
+
+        <!-- 3. الحكمة أو الدعاء (النص الأوسط) -->
+        <div class="space-y-2 pt-3 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
               <i class="fa-solid fa-quote-right text-amber-400"></i> الحكمة أو الدعاء
@@ -143,91 +166,54 @@
               <i class="fa-solid fa-sparkles"></i> اقتراح حكمة
             </button>
           </div>
-
-          <div class="flex items-center gap-2">
-            <select id="quoteFontSelect" onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
-              <option value="font-amiri" selected>الخط الأميري</option>
-              <option value="font-ruqaa">خط الرقعة</option>
-              <option value="font-kufi">الخط الكوفي</option>
-              <option value="font-naskh">خط النسخ</option>
-              <option value="font-cairo">خط كايرو</option>
-              <option value="font-tajawal">خط تجوال</option>
-            </select>
-          </div>
-
+          <select onchange="updateQuoteFont(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+            <option value="font-amiri" selected>الخط الأميري (عثماني)</option>
+            <option value="font-cairo">خط كايرو (عصري)</option>
+            <option value="font-tajawal">خط تجوال (ناعم)</option>
+          </select>
           <textarea id="quoteTextInput" rows="3" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."</textarea>
         </div>
 
-        <!-- 2. الهدف اليومي أو التحدي (الجزء السفلي الجديد) -->
+        <!-- 4. حدث في مثل هذا اليوم (القسم السفلي) -->
         <div class="space-y-2 pt-3 border-t border-slate-800/80">
-           <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-bullseye text-rose-400"></i> هدف أو تحدي اليوم (القسم السفلي)
-           </label>
-           <input type="text" id="dailyGoalInput" value="ابتسم وكن مصدراً للطاقة الإيجابية اليوم" oninput="updateDailyGoal(this.value)" placeholder="اكتب هدفاً أو نصيحة قصيرة..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
+           <div class="flex items-center justify-between">
+             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-rose-400"></i> حدث في مثل هذا اليوم
+             </label>
+             <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked onchange="toggleElement('historyEventBox', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+             </label>
+           </div>
+           <div class="flex gap-1.5">
+             <input type="text" id="historyTextInput" value="في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ." oninput="updateHistoryText(this.value)" placeholder="اكتب حدثاً تاريخياً..." class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
+             <button onclick="generateHistoryEvent()" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-400 rounded-xl px-3 py-1.5 text-[11px] font-bold flex items-center gap-1 transition whitespace-nowrap">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>توليد</span>
+             </button>
+           </div>
         </div>
 
-        <!-- 3. اختيار الخلفية وتوليد صور AI -->
-        <div class="space-y-2 pt-3 border-t border-slate-800/80">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-photo-film text-indigo-400"></i> خلفية البطاقة (فيديو أو صورة)
-            </label>
-            <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[10px]">فيديو مخصص</span>
-          </div>
-
+        <!-- 5. اختيار الوسائط واستخراج الصوت -->
+        <div class="space-y-3 pt-3 border-t border-slate-800/80">
           <label class="cursor-pointer w-full bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
-            <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-sm group-hover:scale-110 transition"></i>
+            <i class="fa-solid fa-photo-film text-amber-400 text-sm group-hover:scale-110 transition"></i>
             <span class="text-xs font-medium text-slate-200">اختر فيديو أو صورة للخلفية</span>
-            <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
+            <input type="file" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
           </label>
           
-          <div class="flex gap-1.5 pt-1">
-            <input type="text" id="customAiPrompt" placeholder="صف مشهد للتوليد (شروق، بحر، طبيعة...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
-            <button onclick="generateFreshAiImage()" id="generateAiBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition whitespace-nowrap shadow-md shadow-indigo-600/20">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> <span>توليد صورة AI</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 4. استخراج الموسيقى الخارجي (الإضافة الجديدة البطلة!) -->
-        <div class="space-y-2 pt-3 border-t border-slate-800/80 bg-slate-900/40 p-3 rounded-xl border border-slate-800">
-          <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-            <i class="fa-solid fa-music text-emerald-400"></i> استخراج الموسيقى/الصوت من فيديو آخر
-          </label>
-          <p class="text-[10px] text-slate-400">اختر فيديو من جهازك، وسنقوم بسحب الصوت منه لتشغيله في الخلفية.</p>
-          
-          <label class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 py-2 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
+          <label class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
             <i class="fa-solid fa-file-audio text-emerald-400 text-sm"></i>
-            <span class="text-xs font-medium text-slate-200" id="audioExtractLabel">اختر فيديو لاستخراج الصوت...</span>
-            <input type="file" id="audioExtractInput" accept="video/*" class="hidden" onchange="handleAudioExtraction(event)">
+            <span class="text-xs font-medium text-slate-200" id="audioExtractLabel">اختر فيديو لاستخراج الصوت (خلفية موسيقية)...</span>
+            <input type="file" accept="video/*" class="hidden" onchange="handleAudioExtraction(event)">
           </label>
-          
-          <!-- مشغل صوت مخفي لتخزين وتشغيل الصوت المستخرج -->
           <audio id="extractedAudioPlayer" loop crossorigin="anonymous"></audio>
-        </div>
-
-        <!-- 5. مدة الفيديو وحقوق التصميم -->
-        <div class="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
-           <div>
-              <label class="text-[11px] text-slate-400 block mb-1">مدة التسجيل:</label>
-              <select id="videoDurationSelect" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-amber-300 focus:outline-none">
-                <option value="auto" selected>تلقائي (حسب طول الفيديو/الصوت)</option>
-                <option value="8">8 ثوانٍ</option>
-                <option value="15">15 ثانية (للقصص)</option>
-                <option value="30">30 ثانية</option>
-              </select>
-           </div>
-           <div>
-              <label class="text-[11px] text-slate-400 block mb-1">اسمك/حقوقك:</label>
-              <input type="text" id="watermarkTextInput" value="@SAB3-77" oninput="updateWatermarkText(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-purple-400" dir="ltr">
-           </div>
         </div>
 
       </div>
 
       <!-- الزر الرئيسي للحفظ -->
       <div class="space-y-2">
-        <button id="saveMainBtn" onclick="handleMainExport()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+        <button onclick="handleMainExport()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
           <i id="saveBtnIcon" class="fa-solid fa-film text-base"></i>
           <span id="saveBtnLabel">تجهيز وحفظ الفيديو (آيفون)</span>
         </button>
@@ -235,7 +221,7 @@
 
     </div>
 
-    <!-- قسم المعاينة المباشرة -->
+    <!-- ================== قسم المعاينة المباشرة ================== -->
     <div class="lg:col-span-6 flex flex-col items-center animate-fade-up delay-2">
       
       <div id="phoneContainer" class="relative w-full max-w-[340px] md:max-w-[370px] rounded-[44px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl">
@@ -243,73 +229,54 @@
 
         <div id="storyCard" class="relative rounded-[36px] overflow-hidden flex flex-col justify-between p-3.5 bg-black select-none text-white shadow-inner">
           
+          <!-- الخلفية (فيديو أو صورة) -->
           <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0" playsinline webkit-playsinline loop autoplay crossorigin="anonymous"></video>
-          <img id="cardImageBg" src="" class="absolute inset-0 w-full h-full object-cover z-0 hidden transition-opacity duration-500" crossorigin="anonymous" alt="خلفية البطاقة">
+          <img id="cardImageBg" src="" class="absolute inset-0 w-full h-full object-cover z-0 hidden transition-opacity duration-500" crossorigin="anonymous">
           <div id="gradientOverlay" class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
 
-          <!-- القسم العلوي: التاريخ والحكمة -->
-          <div class="relative z-10 w-full space-y-2 pt-2 flex-shrink-0">
-            <div id="dateBar" class="glass-pill rounded-full px-3 h-8 grid grid-cols-12 items-center text-[11px] font-medium text-amber-300 overflow-hidden">
-              <div class="col-span-5 flex items-center justify-start h-full">
-                <span id="hijriDateText" class="date-movable arabic-clean leading-none transform -translate-y-[9px]">٤ جمادى الأولى، ١٤٤٨ هـ</span>
-              </div>
-              <div class="col-span-2 flex items-center justify-center h-full">
-                <span class="date-movable text-amber-400 text-xs leading-none transform -translate-y-[9px]">✦</span>
-              </div>
-              <div class="col-span-5 flex items-center justify-end h-full">
-                <span id="gregorianDateText" class="date-movable arabic-clean leading-none transform -translate-y-[9px]">١٥ أكتوبر، ٢٠٢٦ م</span>
-              </div>
+          <!-- ================= القسم العلوي (التاريخ يمين - الحقوق يسار) ================= -->
+          <div id="topSectionContainer" class="relative z-10 w-full flex justify-between items-start pt-4 px-2 flex-shrink-0 transition-transform duration-300">
+            
+            <!-- الحقوق (اليسار) -->
+            <div id="watermarkBoxOverlay" class="top-overlay-bg rounded-xl px-2 py-1.5 transition-colors duration-300">
+              <span id="watermarkTextDisplay" class="font-cairo text-[11px] text-white tracking-wide select-none drop-shadow" dir="ltr">
+                تصميم: @SAB3-77
+              </span>
             </div>
 
-            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-2.5 max-h-[170px] overflow-y-auto no-scrollbar flex items-center justify-center text-center border border-white/10">
-              <p id="quoteTextDisplay" class="font-amiri text-xs md:text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center flex items-center justify-center transition-all duration-200">
+            <!-- التاريخ (اليمين) -->
+            <div id="dateBoxOverlay" class="top-overlay-bg rounded-xl p-2 flex flex-col items-end text-right transition-colors duration-300 min-w-[100px]">
+               <span id="dayNameText" class="text-amber-400 font-cairo font-bold text-[13px] leading-tight">الخميس</span>
+               <span id="hijriDateText" class="text-white font-cairo font-medium text-[11px] mt-0.5 leading-tight">١٥ ربيع الأول ١٤٤٨ هـ</span>
+               <span id="gregorianDateText" class="text-slate-300 font-cairo text-[10px] mt-0.5 leading-tight">١٥ أكتوبر ٢٠٢٦ م</span>
+            </div>
+
+          </div>
+
+          <!-- مساحة الحكمة الوسطية -->
+          <div class="relative z-10 w-full flex-1 flex flex-col justify-center py-4 pointer-events-none">
+            <div id="quoteCardBox" class="glass-panel rounded-2xl px-3.5 py-4 max-h-[200px] overflow-y-auto no-scrollbar flex items-center justify-center text-center border border-white/10 pointer-events-auto mx-2">
+              <p id="quoteTextDisplay" class="font-amiri text-sm text-amber-100 font-bold arabic-clean leading-relaxed m-0 p-0 text-center transition-all duration-200 drop-shadow-md">
                 "التفاؤل والصبر هما طريقك لتجاوز صعوبات الحياة والسعي نحو الأهداف .."
               </p>
             </div>
           </div>
 
-          <div class="flex-1 min-h-0 pointer-events-none"></div>
-
-          <!-- القسم السفلي الجديد: الهدف وميني بلاير -->
-          <div class="relative z-10 w-full space-y-1 pb-1 flex-shrink-0">
+          <!-- ================= القسم السفلي (حدث في مثل هذا اليوم) ================= -->
+          <div class="relative z-10 w-full space-y-1 pb-2 flex-shrink-0 px-2">
             
-            <!-- حقوق التصميم -->
-            <div id="watermarkBox" class="w-full flex items-center justify-center py-0.5 transition-all">
-              <span id="watermarkTextDisplay" class="font-cinzel text-[11px] text-white opacity-50 tracking-wider uppercase select-none drop-shadow" dir="ltr">
-                @SAB3-77
-              </span>
+            <div id="historyEventBox" class="glass-panel rounded-2xl p-3 border border-white/10 flex-shrink-0 transition-all duration-300">
+              <div class="flex items-center gap-2 border-b border-white/10 pb-2 mb-2">
+                <div class="w-6 h-6 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                   <i class="fa-solid fa-clock-rotate-left text-amber-400 text-[10px]"></i>
+                </div>
+                <span class="text-[11px] font-bold text-white font-cairo">حدث في مثل هذا اليوم</span>
+              </div>
+              <p id="historyEventDisplay" class="text-[11px] md:text-xs text-slate-200 font-cairo leading-relaxed">
+                في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ.
+              </p>
             </div>
 
-            <!-- بطاقة الهدف والموسيقى (بديل الصلوات) -->
-            <div id="dailyGoalBox" class="glass-panel rounded-2xl p-3 border border-white/10 space-y-2 flex-shrink-0">
-              
-              <!-- الهدف / التحدي -->
-              <div class="flex items-start gap-2 border-b border-white/10 pb-2">
-                <div class="w-6 h-6 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                   <i class="fa-solid fa-bullseye text-rose-400 text-[10px]"></i>
-                </div>
-                <div>
-                   <span class="block text-[10px] text-slate-400 font-cairo">تحدي اليوم</span>
-                   <span id="dailyGoalDisplay" class="block text-[11px] md:text-xs font-bold text-white font-cairo leading-snug">ابتسم وكن مصدراً للطاقة الإيجابية اليوم</span>
-                </div>
-              </div>
-
-              <!-- مشغل الموسيقى المصغر (Mini Player) -->
-              <div class="flex items-center justify-between bg-white/5 py-1.5 px-3 rounded-xl border border-white/5">
-                <div class="flex items-center gap-2">
-                   <i class="fa-solid fa-circle-play text-amber-400 text-sm"></i>
-                   <span class="text-[11px] text-slate-200 font-cairo font-medium" id="audioTitleDisplay">موسيقى هادئة للتأمل</span>
-                </div>
-                <!-- موجة الصوت الأنيميشن -->
-                <div class="sound-wave paused" id="soundWaveAnim">
-                   <div class="sound-bar"></div>
-                   <div class="sound-bar"></div>
-                   <div class="sound-bar"></div>
-                   <div class="sound-bar"></div>
-                </div>
-              </div>
-
-            </div>
           </div>
 
         </div>
@@ -317,7 +284,7 @@
     </div>
   </main>
 
-  <!-- شريط التقدم ونوافذ الحفظ (تم الإبقاء عليها كما هي للفعالية) -->
+  <!-- نوافذ التحميل والمعاينة -->
   <div id="videoProgressBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 border border-slate-700 shadow-2xl rounded-2xl p-4 w-[90%] max-w-sm hidden flex flex-col items-center text-center backdrop-blur-md">
     <div class="flex items-center gap-2 mb-2">
       <i class="fa-solid fa-circle-notch fa-spin text-amber-400 text-sm"></i>
@@ -362,20 +329,23 @@
 
   <script>
     let currentMediaType = 'video';
-    let currentVideoBlob = null;
-    let currentVideoMime = '';
-    let currentVideoUrl = '';
-    
-    // متغير لتحديد ما إذا كان لدينا صوت مستخرج من فيديو خارجي
     let hasExtractedAudio = false;
+
+    // بنك الأحداث التاريخية للذكاء الاصطناعي
+    const historicalEvents = [
+      "في مثل هذا اليوم عام 1582، بدأ استخدام التقويم الغريغوري (الميلادي) لأول مرة في التاريخ.",
+      "في مثل هذا اليوم عام 1964، حصل الزعيم مارتن لوثر كينغ على جائزة نوبل للسلام لجهوده في إنهاء التمييز العنصري.",
+      "في مثل هذا اليوم عام 1815، بدأ نفي الإمبراطور الفرنسي نابليون بونابرت إلى جزيرة سانت هيلانة.",
+      "في مثل هذا اليوم عام 1990، مُنح الرئيس السوفيتي ميخائيل غورباتشوف جائزة نوبل للسلام.",
+      "في مثل هذا اليوم عام 2003، أطلقت الصين أول رحلة فضائية مأهولة لها (شنتشو 5).",
+      "في مثل هذا اليوم، تتجدد فرصتك لكتابة تاريخك الخاص وصنع أثر إيجابي في حياتك وحياة من حولك. (رسالة اليوم)"
+    ];
 
     window.addEventListener('DOMContentLoaded', () => {
       setDynamicGreeting();
       formatArabicDates();
       updateCardQuote(document.getElementById('quoteTextInput').value);
-      updateDailyGoal(document.getElementById('dailyGoalInput').value);
-      
-      // التوهج الافتراضي للبطاقة
+      updateHistoryText(document.getElementById('historyTextInput').value);
       document.getElementById('phoneContainer').style.boxShadow = '0 0 40px -10px rgba(245, 158, 11, 0.2)';
     });
 
@@ -390,28 +360,82 @@
       document.getElementById('headerIcon').className = `fa-solid ${icon} text-lg`;
     }
 
+    // 🌟 التنسيق الجديد للتاريخ (اليوم، الهجري، الميلادي)
     function formatArabicDates() {
       const now = new Date();
-      const gregorianFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
-      document.getElementById('gregorianDateText').textContent = gregorianFormatter.format(now).replace('هـ', '').trim() + ' م';
+      
+      // جلب اسم اليوم
+      const dayFormatter = new Intl.DateTimeFormat('ar-SA', { weekday: 'long' });
+      document.getElementById('dayNameText').textContent = dayFormatter.format(now);
 
+      // الميلادي
+      const gregFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('gregorianDateText').textContent = gregFormatter.format(now).replace('هـ', '').trim() + ' م';
+
+      // الهجري
       try {
         const hijriFormatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
         let hijriRaw = hijriFormatter.format(now).replace(/هـ/g, '').replace(/AH/g, '').trim();
         document.getElementById('hijriDateText').textContent = hijriRaw + ' هـ';
       } catch (e) {
-        document.getElementById('hijriDateText').textContent = '٤ جمادى الأولى، ١٤٤٨ هـ';
+        document.getElementById('hijriDateText').textContent = '١٥ ربيع الأول ١٤٤٨ هـ';
       }
     }
 
+    // 🌟 التحكم ببروز وتعيم الخلفية العلوية
+    function updateTopBgOpacity(val) {
+      document.getElementById('topBgOpacityValue').textContent = `${val}%`;
+      const alpha = val / 100;
+      const elements = document.querySelectorAll('.top-overlay-bg');
+      elements.forEach(el => {
+        el.style.backgroundColor = `rgba(0, 0, 0, ${alpha})`;
+      });
+    }
+
+    function adjustDateOffset(val) {
+      document.getElementById('dateOffsetValue').textContent = `${val}px`;
+      document.getElementById('topSectionContainer').style.transform = `translateY(${val}px)`;
+    }
+
+    function toggleElement(elementId, isVisible) {
+      const el = document.getElementById(elementId);
+      if (isVisible) el.classList.remove('hidden');
+      else el.classList.add('hidden');
+    }
+
+    // 🌟 تحديث وتوليد الأحداث التاريخية
+    function updateHistoryText(text) {
+        document.getElementById('historyEventDisplay').textContent = text.trim() || 'لا توجد أحداث.';
+    }
+    
+    function generateHistoryEvent() {
+      const randomEvent = historicalEvents[Math.floor(Math.random() * historicalEvents.length)];
+      document.getElementById('historyTextInput').value = randomEvent;
+      updateHistoryText(randomEvent);
+    }
+
+    // الحقوق والحكمة
+    function updateWatermarkText(text) { document.getElementById('watermarkTextDisplay').textContent = text.trim() || ''; }
+    function updateWatermarkFont(fontClass) {
+      const wmEl = document.getElementById('watermarkTextDisplay');
+      wmEl.className = wmEl.className.replace(/font-\w+/g, '');
+      wmEl.classList.add(fontClass);
+    }
+    function updateWatermarkOpacity(val) {
+      document.getElementById('wmOpacityVal').textContent = `${val}%`;
+      document.getElementById('watermarkTextDisplay').style.opacity = val / 100;
+    }
+    function updateWatermarkSize(val) {
+      document.getElementById('wmSizeVal').textContent = `${val}px`;
+      document.getElementById('watermarkTextDisplay').style.fontSize = `${val}px`;
+    }
+    function updateWatermarkColor(colorHex) { document.getElementById('watermarkTextDisplay').style.color = colorHex; }
+    
     function updateQuoteFont(fontClass) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       quoteEl.className = quoteEl.className.replace(/font-\w+/g, '');
       quoteEl.classList.add(fontClass);
     }
-    
-    function updateWatermarkText(text) { document.getElementById('watermarkTextDisplay').textContent = text.trim() || ''; }
-    
     function updateCardQuote(text) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       const t = text.trim() || '""';
@@ -419,49 +443,19 @@
       if (t.length > 130) { quoteEl.style.fontSize = '0.75rem'; quoteEl.style.lineHeight = '1.45'; }
       else if (t.length > 75) { quoteEl.style.fontSize = '0.90rem'; quoteEl.style.lineHeight = '1.55'; }
       else if (t.length > 40) { quoteEl.style.fontSize = '1.05rem'; quoteEl.style.lineHeight = '1.65'; }
-      else { quoteEl.style.fontSize = '1.25rem'; quoteEl.style.lineHeight = '1.75'; }
+      else { quoteEl.style.fontSize = '1.15rem'; quoteEl.style.lineHeight = '1.75'; }
+    }
+    function generateAiQuote() {
+      const quotes = ["سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "الابتسامة كلمة طيبة بغير حروف."];
+      const random = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('quoteTextInput').value = random;
+      updateCardQuote(random);
     }
 
-    function updateDailyGoal(text) {
-        const display = document.getElementById('dailyGoalDisplay');
-        display.textContent = text.trim() || 'اكتب هدفك هنا';
-    }
-
-    async function generateFreshAiImage() {
-      const btn = document.getElementById('generateAiBtn');
-      const input = document.getElementById('customAiPrompt');
-      const imgEl = document.getElementById('cardImageBg');
-      const videoEl = document.getElementById('cardVideoBg');
-
-      const originalBtnHTML = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد...</span>`;
-      btn.disabled = true;
-
-      let promptText = input.value.trim() || 'serene nature sunset';
-      const fullPrompt = encodeURIComponent(`${promptText}, majestic cinematic lighting, 8k, photorealistic, vertical story wallpaper, clean frame, no watermark`);
-      const randomSeed = Math.floor(Math.random() * 9999999);
-      const aiImageUrl = `https://image.pollinations.ai/prompt/${fullPrompt}?width=720&height=1280&seed=${randomSeed}&nologo=true&model=flux`;
-
-      const tempImg = new Image();
-      tempImg.crossOrigin = "anonymous";
-      tempImg.onload = () => {
-        imgEl.src = aiImageUrl;
-        imgEl.classList.remove('hidden');
-        videoEl.classList.add('hidden');
-        videoEl.pause();
-        currentMediaType = 'image';
-        btn.innerHTML = originalBtnHTML;
-        btn.disabled = false;
-        document.getElementById('mediaTypeBadge').textContent = 'صورة AI جديدة';
-        checkAudioState(); // تحديث الأنيميشن
-      };
-      tempImg.src = aiImageUrl;
-    }
-
+    // الوسائط والصوت
     function handleUserMediaUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       const imgEl = document.getElementById('cardImageBg');
       const videoEl = document.getElementById('cardVideoBg');
 
@@ -470,17 +464,9 @@
         videoEl.src = URL.createObjectURL(file);
         videoEl.classList.remove('hidden');
         imgEl.classList.add('hidden');
-        
-        // إذا كان هناك صوت خارجي مستخرج، نكتم صوت هذا الفيديو الأساسي
-        if(hasExtractedAudio) {
-            videoEl.muted = true;
-        } else {
-            videoEl.muted = false;
-        }
-        
+        videoEl.muted = hasExtractedAudio;
         videoEl.volume = 1.0;
         videoEl.play().catch(()=>{});
-        document.getElementById('mediaTypeBadge').textContent = 'فيديو مخصص';
       } else if (file.type.startsWith('image/')) {
         currentMediaType = 'image';
         const reader = new FileReader();
@@ -489,68 +475,30 @@
           imgEl.classList.remove('hidden');
           videoEl.classList.add('hidden');
           videoEl.pause();
-          document.getElementById('mediaTypeBadge').textContent = 'صورة مخصصة';
         };
         reader.readAsDataURL(file);
       }
-      checkAudioState();
     }
 
-    // 🔥 الفكرة البطلة: استخراج الصوت من فيديو منفصل
     function handleAudioExtraction(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       if (file.type.startsWith('video/')) {
         const audioUrl = URL.createObjectURL(file);
         const audioPlayer = document.getElementById('extractedAudioPlayer');
-        
         audioPlayer.src = audioUrl;
         hasExtractedAudio = true;
-        
-        // كتم صوت فيديو الخلفية إذا كان موجوداً، لكي لا يتداخل الصوتان
         const videoBg = document.getElementById('cardVideoBg');
         if(videoBg) videoBg.muted = true;
-
         audioPlayer.play().then(() => {
-            document.getElementById('audioExtractLabel').textContent = "✅ تم استخراج الصوت: " + file.name.substring(0, 15) + "...";
-            document.getElementById('audioTitleDisplay').textContent = "موسيقى مستخرجة";
-            checkAudioState();
-        }).catch(err => {
-            console.log("يجب النقر أولاً لتشغيل الصوت", err);
-        });
-      } else {
-          alert("الرجاء اختيار ملف فيديو لاستخراج الصوت منه.");
-      }
-    }
-
-    // تحديث أنيميشن موجة الصوت (Mini Player) بناءً على ما إذا كان هناك صوت يعمل
-    function checkAudioState() {
-        const wave = document.getElementById('soundWaveAnim');
-        const bgVideo = document.getElementById('cardVideoBg');
-        const extAudio = document.getElementById('extractedAudioPlayer');
-        
-        // إذا كان الصوت المستخرج يعمل، أو فيديو الخلفية به صوت ويعمل
-        if (hasExtractedAudio && !extAudio.paused) {
-            wave.classList.remove('paused');
-        } else if (currentMediaType === 'video' && !bgVideo.paused && !bgVideo.muted && !hasExtractedAudio) {
-            wave.classList.remove('paused');
-        } else {
-            wave.classList.add('paused');
-        }
+            document.getElementById('audioExtractLabel').textContent = "✅ تم دمج الموسيقى بنجاح!";
+        }).catch(err => { console.log(err); });
+      } else { alert("اختر فيديو!"); }
     }
 
     function pickBestMimeType() {
-      const candidates = [
-        'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
-        'video/mp4;codecs=avc1,mp4a.40.2',
-        'video/mp4',
-        'video/webm;codecs=vp8,opus',
-        'video/webm'
-      ];
-      for (const c of candidates) {
-        try { if (MediaRecorder.isTypeSupported(c)) return c; } catch (e) {}
-      }
+      const candidates = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp8,opus', 'video/webm'];
+      for (const c of candidates) { try { if (MediaRecorder.isTypeSupported(c)) return c; } catch (e) {} }
       return 'video/mp4';
     }
 
@@ -558,13 +506,9 @@
       const mWidth = media.videoWidth || media.naturalWidth || media.width;
       const mHeight = media.videoHeight || media.naturalHeight || media.height;
       if (!mWidth || !mHeight) return;
-
       const scale = Math.max(targetW / mWidth, targetH / mHeight);
-      const drawW = mWidth * scale;
-      const drawH = mHeight * scale;
-      const drawX = (targetW - drawW) / 2;
-      const drawY = (targetH - drawH) / 2;
-      ctx.drawImage(media, drawX, drawY, drawW, drawH);
+      const drawW = mWidth * scale; const drawH = mHeight * scale;
+      ctx.drawImage(media, (targetW - drawW) / 2, (targetH - drawH) / 2, drawW, drawH);
     }
 
     function handleMainExport() {
@@ -575,21 +519,13 @@
           if (window._sharedAudioCtx.state === 'suspended') window._sharedAudioCtx.resume();
         }
       } catch(e){}
-
-      // إذا أراد المستخدم استخراج فيديو به حركة (حتى لو كانت الخلفية صورة، لكنه أضاف صوتاً)
-      if (currentMediaType === 'video' || hasExtractedAudio) {
-        exportMotionVideo();
-      } else {
-        exportStaticImage();
-      }
+      if (currentMediaType === 'video' || hasExtractedAudio) { exportMotionVideo(); } else { exportStaticImage(); }
     }
 
-    // تصدير الصورة الثابتة (في حال لم يرفع فيديو ولم يختر صوتاً)
     async function exportStaticImage() {
       const card = document.getElementById('storyCard');
       const progressBanner = document.getElementById('videoProgressBanner');
       progressBanner.classList.remove('hidden');
-
       try {
         await document.fonts.ready;
         const canvas = await html2canvas(card, { scale: 3, useCORS: true, allowTaint: false, backgroundColor: '#000000' });
@@ -599,12 +535,10 @@
           showImagePreviewModal(URL.createObjectURL(blob), file);
         }, 'image/png');
       } catch (err) {
-        progressBanner.classList.add('hidden');
-        alert('حدث خطأ أثناء التصدير.');
+        progressBanner.classList.add('hidden'); alert('حدث خطأ.');
       }
     }
 
-    // التصدير السحري للفيديو والصوت المستخرج
     async function exportMotionVideo() {
       const videoEl = document.getElementById('cardVideoBg');
       const extAudioEl = document.getElementById('extractedAudioPlayer');
@@ -612,31 +546,19 @@
       const progressBanner = document.getElementById('videoProgressBanner');
       const progressBar = document.getElementById('videoProgressBar');
       const percentEl = document.getElementById('videoPercent');
-      const durationSelect = document.getElementById('videoDurationSelect');
 
       let recordDurationMs = 8000;
-      if (durationSelect && durationSelect.value !== 'auto') {
-        recordDurationMs = parseInt(durationSelect.value, 10) * 1000;
-      } else {
-        if(hasExtractedAudio && extAudioEl.duration) {
-            recordDurationMs = Math.round(extAudioEl.duration * 1000);
-        } else if (currentMediaType === 'video' && videoEl.duration) {
-            recordDurationMs = Math.round(videoEl.duration * 1000);
-        }
-      }
+      if(hasExtractedAudio && extAudioEl.duration) { recordDurationMs = Math.round(extAudioEl.duration * 1000); } 
+      else if (currentMediaType === 'video' && videoEl.duration) { recordDurationMs = Math.round(videoEl.duration * 1000); }
       recordDurationMs = Math.max(5000, Math.min(recordDurationMs, 60000));
 
       progressBanner.classList.remove('hidden');
       progressBar.style.width = '5%';
-      
-      // تشغيل الأنيميشن للصوت وقت التسجيل ليبدو وكأنه يتفاعل
-      document.getElementById('soundWaveAnim').classList.remove('paused');
 
       await document.fonts.ready;
       const hadBgBlack = card.classList.contains('bg-black');
       card.classList.remove('bg-black');
-      const prevBgColor = card.style.backgroundColor;
-      card.style.backgroundColor = 'transparent';
+      const prevBgColor = card.style.backgroundColor; card.style.backgroundColor = 'transparent';
 
       let overlayCanvas;
       try {
@@ -645,16 +567,13 @@
           ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
         });
       } catch(err) {
-        progressBanner.classList.add('hidden'); alert("حدث خطأ في الطبقات.");
-        if (hadBgBlack) card.classList.add('bg-black');
-        return;
+        progressBanner.classList.add('hidden'); alert("خطأ.");
+        if (hadBgBlack) card.classList.add('bg-black'); return;
       }
-      if (hadBgBlack) card.classList.add('bg-black');
-      card.style.backgroundColor = prevBgColor;
+      if (hadBgBlack) card.classList.add('bg-black'); card.style.backgroundColor = prevBgColor;
 
       const width = 720; const height = 1280;
-      const renderCanvas = document.createElement('canvas');
-      renderCanvas.width = width; renderCanvas.height = height;
+      const renderCanvas = document.createElement('canvas'); renderCanvas.width = width; renderCanvas.height = height;
       const ctx = renderCanvas.getContext('2d');
 
       let audioTrack = null;
@@ -665,97 +584,59 @@
           const actx = window._sharedAudioCtx;
           if (actx.state === 'suspended') await actx.resume();
 
-          // اختيار المصدر الصوتي (الصوت المستخرج أولاً، ثم فيديو الخلفية إذا لم يوجد مستخرج)
           let sourceMedia = hasExtractedAudio ? extAudioEl : videoEl;
-          
           if (!sourceMedia._audioSource) {
             sourceMedia._audioSource = actx.createMediaElementSource(sourceMedia);
             sourceMedia._audioDest = actx.createMediaStreamDestination();
             sourceMedia._audioSource.connect(sourceMedia._audioDest);
-            const monitorGain = actx.createGain();
-            monitorGain.gain.value = 1.0;
-            sourceMedia._audioSource.connect(monitorGain);
-            monitorGain.connect(actx.destination);
+            const monitorGain = actx.createGain(); monitorGain.gain.value = 1.0;
+            sourceMedia._audioSource.connect(monitorGain); monitorGain.connect(actx.destination);
           }
           audioTrack = sourceMedia._audioDest.stream.getAudioTracks()[0];
-          
-          // تأكد من التشغيل
-          sourceMedia.currentTime = 0;
-          await sourceMedia.play().catch(()=>{});
+          sourceMedia.currentTime = 0; await sourceMedia.play().catch(()=>{});
         }
-      } catch (e) { console.warn('Audio Routing Info:', e); }
+      } catch (e) {}
 
-      // تأكد من تشغيل فيديو الخلفية (سواء بصوت أو بدون)
-      if (currentMediaType === 'video') {
-         videoEl.currentTime = 0;
-         await videoEl.play().catch(()=>{});
-      }
+      if (currentMediaType === 'video') { videoEl.currentTime = 0; await videoEl.play().catch(()=>{}); }
 
-      const FPS = 25;
-      const canvasStream = renderCanvas.captureStream(FPS);
-
+      const canvasStream = renderCanvas.captureStream(25);
       let combinedStream = canvasStream;
-      if (audioTrack) {
-        const videoTrack = canvasStream.getVideoTracks()[0];
-        combinedStream = new MediaStream([videoTrack, audioTrack]);
-      }
+      if (audioTrack) { combinedStream = new MediaStream([canvasStream.getVideoTracks()[0], audioTrack]); }
 
       const mimeType = pickBestMimeType();
       let recorder;
-      try {
-        recorder = new MediaRecorder(combinedStream, { mimeType: mimeType, videoBitsPerSecond: 5000000 });
-      } catch (e) {
-        progressBanner.classList.add('hidden'); alert('تعذر بدء التسجيل: ' + e.message); return;
-      }
+      try { recorder = new MediaRecorder(combinedStream, { mimeType: mimeType, videoBitsPerSecond: 5000000 }); } 
+      catch (e) { progressBanner.classList.add('hidden'); return; }
 
       const chunks = [];
       recorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
-
-      const startTime = performance.now();
-      recorder.start();
+      const startTime = performance.now(); recorder.start();
 
       function drawFrame() {
         const elapsed = performance.now() - startTime;
         const progress = Math.min(elapsed / recordDurationMs, 1);
-        
         progressBar.style.width = (progress * 100).toFixed(0) + '%';
         percentEl.textContent = Math.round(progress * 100) + '%';
 
-        // رسم الخلفية (إما فيديو أو صورة)
-        if(currentMediaType === 'video') {
-            drawImageCover(ctx, videoEl, width, height);
-        } else {
-            const imgEl = document.getElementById('cardImageBg');
-            drawImageCover(ctx, imgEl, width, height);
-        }
+        if(currentMediaType === 'video') { drawImageCover(ctx, videoEl, width, height); } 
+        else { drawImageCover(ctx, document.getElementById('cardImageBg'), width, height); }
 
         const gradient = ctx.createLinearGradient(0, 0, 0, height);
-        gradient.addColorStop(0, 'rgba(0,0,0,0.55)');
-        gradient.addColorStop(0.35, 'rgba(0,0,0,0.0)');
-        gradient.addColorStop(0.65, 'rgba(0,0,0,0.0)');
-        gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
+        gradient.addColorStop(0, 'rgba(0,0,0,0.55)'); gradient.addColorStop(0.35, 'rgba(0,0,0,0.0)');
+        gradient.addColorStop(0.65, 'rgba(0,0,0,0.0)'); gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
+        ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
 
         ctx.drawImage(overlayCanvas, 0, 0, width, height);
 
-        if (elapsed < recordDurationMs) {
-          requestAnimationFrame(drawFrame);
-        } else {
-          recorder.stop();
-        }
+        if (elapsed < recordDurationMs) { requestAnimationFrame(drawFrame); } else { recorder.stop(); }
       }
-
       requestAnimationFrame(drawFrame);
 
       recorder.onstop = () => {
         progressBanner.classList.add('hidden');
-        document.getElementById('soundWaveAnim').classList.add('paused'); // إيقاف أنيميشن الموجة
-        
         const recordedBlob = new Blob(chunks, { type: mimeType });
-        currentVideoUrl = URL.createObjectURL(recordedBlob);
         const file = new File([recordedBlob], `daily-story-${Date.now()}.mp4`, { type: mimeType });
-        showVideoPreviewModal(currentVideoUrl, file, mimeType, recordDurationMs);
+        showVideoPreviewModal(URL.createObjectURL(recordedBlob), file, mimeType, recordDurationMs);
       };
     }
     
@@ -764,8 +645,7 @@
       document.getElementById('resultVideoPlayer').classList.add('hidden');
       const imgPreview = document.getElementById('resultImagePreview');
       imgPreview.src = url; imgPreview.classList.remove('hidden');
-      setupDownloadShare(file);
-      document.getElementById('videoPreviewModal').classList.remove('hidden');
+      setupDownloadShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
     }
     
     function showVideoPreviewModal(url, file, mimeType, durationMs) {
@@ -774,8 +654,7 @@
       const previewVideo = document.getElementById('resultVideoPlayer');
       previewVideo.src = url; previewVideo.muted = false; previewVideo.classList.remove('hidden');
       previewVideo.play().catch(()=>{});
-      setupDownloadShare(file);
-      document.getElementById('videoPreviewModal').classList.remove('hidden');
+      setupDownloadShare(file); document.getElementById('videoPreviewModal').classList.remove('hidden');
     }
 
     function setupDownloadShare(file) {
@@ -793,11 +672,9 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
-
     function closeVideoPreview() {
-      const previewVideo = document.getElementById('resultVideoPlayer');
-      try { previewVideo.pause(); } catch(e){}
-      previewVideo.src = '';
+      try { document.getElementById('resultVideoPlayer').pause(); } catch(e){}
+      document.getElementById('resultVideoPlayer').src = '';
       document.getElementById('videoPreviewModal').classList.add('hidden');
     }
   </script>
