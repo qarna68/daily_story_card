@@ -85,7 +85,7 @@
       </div>
       <div>
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">بطاقة اليوم الذكية</h1>
-        <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم اليومية مع دعم الفيديو الحقيقي</p>
+        <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم اليومية مع دعم الفيديو والتلاوة</p>
       </div>
     </div>
     
@@ -260,7 +260,7 @@
           <textarea id="quoteTextInput" rows="3" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ إِنَّ الَّذِينَ يَسْتَكْبِرُونَ عَنْ عِبَادَتِي سَيَدْخُلُونَ جَهَنَّمَ دَاخِرِينَ"</textarea>
         </div>
 
-        <!-- 7. اختيار الخلفية وتوليد صور AI -->
+        <!-- 7. اختيار الخلفية ومدة الفيديو وتوليد صور AI -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
@@ -275,6 +275,21 @@
             <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
           </label>
 
+          <!-- التحكم بمدة تسجيل الفيديو ومطابقة طول التلاوة -->
+          <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-300 flex items-center gap-1.5 font-medium">
+              <i class="fa-solid fa-stopwatch text-teal-400"></i> مدة تسجيل الفيديو:
+            </span>
+            <select id="videoDurationSelect" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-amber-300 focus:outline-none">
+              <option value="auto" selected>تلقائي (كامل طول الفيديو)</option>
+              <option value="8">8 ثوانٍ (سريع)</option>
+              <option value="12">12 ثانية (مناسب للآيات)</option>
+              <option value="16">16 ثانية (تلاوة ممتدة)</option>
+              <option value="25">25 ثانية (تلاوة كاملة)</option>
+            </select>
+          </div>
+
+          <!-- توليد صور AI -->
           <div class="flex gap-1.5 pt-1">
             <input type="text" id="customAiPrompt" placeholder="صف مشهد للتوليد (شروق هادئ، جبال، رمال...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
             <button onclick="generateFreshAiImage()" id="generateAiBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition whitespace-nowrap shadow-md shadow-indigo-600/20">
@@ -291,7 +306,7 @@
           <i id="saveBtnIcon" class="fa-solid fa-film text-base"></i>
           <span id="saveBtnLabel">حفظ الفيديو في ألبوم الصور (آيفون)</span>
         </button>
-        <p class="text-[11px] text-center text-slate-400">يقوم بتسجيل حركة الفيديو بدقة وفتح نافذة الحفظ الرسمية للآيفون (Photos).</p>
+        <p class="text-[11px] text-center text-slate-400">يسجل كامل حركة الفيديو بدقة ووضوح ويفتح نافذة الحفظ الرسمية للآيفون (Photos).</p>
       </div>
 
     </div>
@@ -416,11 +431,11 @@
 
   </main>
 
-  <!-- شريط تقدم التسجيل (عائم في الأسفل دون حجب الفيديو لتفادي تجميده في سفاري) -->
+  <!-- شريط تقدم التسجيل العائم -->
   <div id="videoProgressBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 border border-slate-700 shadow-2xl rounded-2xl p-4 w-[90%] max-w-sm hidden flex flex-col items-center text-center backdrop-blur-md">
     <div class="flex items-center gap-2 mb-2">
       <i class="fa-solid fa-circle-notch fa-spin text-amber-400 text-sm"></i>
-      <span class="text-xs font-bold text-white font-cairo">🎬 جاري تسجيل حركة الفيديو والأغصان...</span>
+      <span class="text-xs font-bold text-white font-cairo">🎬 جاري تسجيل الفيديو والتلاوة...</span>
     </div>
     
     <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
@@ -437,14 +452,14 @@
     <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-800">
         <h3 class="text-sm font-bold text-white font-cairo flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check text-emerald-400"></i> الفيديو جاهز ومتحرك
+          <i class="fa-solid fa-circle-check text-emerald-400"></i> الفيديو والتلاوة جاهزان
         </h3>
         <span id="formatBadge" class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full font-bold">MP4</span>
       </div>
 
       <!-- مشغل معاينة الفيديو الناتج -->
       <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-64 mx-auto border border-white/10 shadow-lg">
-        <video id="resultVideoPlayer" class="w-full h-full object-cover" controls playsinline autoplay loop muted></video>
+        <video id="resultVideoPlayer" class="w-full h-full object-cover" controls playsinline autoplay loop></video>
       </div>
 
       <!-- أزرار الإجراءات -->
@@ -487,7 +502,7 @@
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-[11px] text-amber-300/90" dir="ltr">
           <p class="text-slate-500"># تحديث الملف على المستودع</p>
           <p>git add index.html</p>
-          <p>git commit -m "حل مشكلة خلفية الفيديو الشفافة"</p>
+          <p>git commit -m "دعم كامل مدة الفيديو وصوت التلاوة"</p>
           <p>git push origin main</p>
         </div>
 
@@ -589,7 +604,7 @@
         hijriRaw = hijriRaw.replace(/هـ/g, '').replace(/AH/g, '').trim();
         document.getElementById('hijriDateText').textContent = hijriRaw + ' هـ';
       } catch (e) {
-        document.getElementById('hijriDateText').textContent = '٤ جمادى الأولى، ١٤٤٨ هـ';
+        document.getElementById('hijriDateText').textContent = '٤ جمادى الأولى، ١٤٨ هـ';
       }
     }
 
@@ -827,7 +842,7 @@
         videoEl.src = fileUrl;
         videoEl.classList.remove('hidden');
         imgEl.classList.add('hidden');
-        videoEl.muted = true;
+        videoEl.muted = false; // تفعيل الصوت للتلاوة
         videoEl.play();
         
         document.getElementById('mediaTypeBadge').textContent = 'فيديو مخصص';
@@ -859,7 +874,7 @@
       }
     }
 
-    // اختيار صيغ وترميز الفيديو المتوافق مع iOS Photos
+    // صيغ الفيديو المتوافقة مع أجهزة آبل
     function pickBestMimeType() {
       const candidates = [
         'video/mp4;codecs=avc1.64001E',
@@ -880,7 +895,7 @@
       return 'video/webm';
     }
 
-    // رسم صورة أو فيديو بنمط Object-Cover دون مط
+    // رسم صورة أو فيديو بنمط Object-Cover
     function drawImageCover(ctx, media, targetW, targetH) {
       const mWidth = media.videoWidth || media.naturalWidth || media.width;
       const mHeight = media.videoHeight || media.naturalHeight || media.height;
@@ -944,7 +959,7 @@
       }
     }
 
-    // تصدير الفيديو الحي بالكامل (مع الحفاظ على شفافية طبقة النصوص ومنع تجميد سفاري)
+    // تصدير الفيديو الحي بالكامل بحسب طول المقطع وصوت التلاوة
     async function exportMotionVideo() {
       const videoEl = document.getElementById('cardVideoBg');
       const card = document.getElementById('storyCard');
@@ -952,14 +967,24 @@
       const progressBar = document.getElementById('videoProgressBar');
       const percentEl = document.getElementById('videoPercent');
       const statusEl = document.getElementById('videoStatus');
+      const durationSelect = document.getElementById('videoDurationSelect');
 
-      // إظهار شريط التقدم العائم أسفل الشاشة دون حجب الفيديو
+      // تحديد مدة التسجيل التلقائية بحسب طول الفيديو الفعلي أو الخيار المختار
+      let recordDurationMs = 8000;
+      if (durationSelect && durationSelect.value !== 'auto') {
+        recordDurationMs = parseInt(durationSelect.value, 10) * 1000;
+      } else if (videoEl.duration && !isNaN(videoEl.duration) && isFinite(videoEl.duration)) {
+        recordDurationMs = Math.round(videoEl.duration * 1000);
+      }
+      // حماية المدة بين 5 ثوانٍ و 60 ثانية
+      recordDurationMs = Math.max(5000, Math.min(recordDurationMs, 60000));
+
       progressBanner.classList.remove('hidden');
-      progressBar.style.width = '10%';
-      percentEl.textContent = '10%';
-      statusEl.textContent = 'تجهيز نصوص البطاقات الشفافة...';
+      progressBar.style.width = '5%';
+      percentEl.textContent = '5%';
+      statusEl.textContent = `تجهيز مدة الفيديو (${(recordDurationMs/1000).toFixed(1)} ث)...`;
 
-      // 1. تفريغ خلفية البطاقة لتكون شفافة 100% ولا تغطي الفيديو باللون الأسود
+      // 1. تفريغ خلفية البطاقة لتكون شفافة تماماً
       await document.fonts.ready;
       const hadBgBlack = card.classList.contains('bg-black');
       card.classList.remove('bg-black');
@@ -974,7 +999,6 @@
         ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
       });
 
-      // إعادة حالة خلفية البطاقة الأصلية
       if (hadBgBlack) card.classList.add('bg-black');
       card.style.backgroundColor = prevBgColor;
 
@@ -986,10 +1010,8 @@
       renderCanvas.height = height;
       const ctx = renderCanvas.getContext('2d');
 
-      // 3. ضمان تشغيل وتدفق إطارات الفيديو الفعلية
-      videoEl.muted = true;
+      // 3. إعادة الفيديو للبداية وضمان تدفق الحركة
       videoEl.loop = true;
-
       if (videoEl.currentTime > 0.1) {
         videoEl.currentTime = 0;
         await new Promise(res => {
@@ -1007,12 +1029,29 @@
       });
 
       const FPS = 25;
-      const stream = renderCanvas.captureStream(FPS);
-      const mimeType = pickBestMimeType();
+      const canvasStream = renderCanvas.captureStream(FPS);
 
+      // دمج مسار صوت التلاوة إذا كان الفيديو يحتوي على صوت
+      let finalStream = canvasStream;
+      try {
+        let audioStream = null;
+        if (typeof videoEl.captureStream === 'function') {
+          audioStream = videoEl.captureStream();
+        } else if (typeof videoEl.mozCaptureStream === 'function') {
+          audioStream = videoEl.mozCaptureStream();
+        }
+        if (audioStream && audioStream.getAudioTracks().length > 0) {
+          const tracks = [...canvasStream.getVideoTracks(), ...audioStream.getAudioTracks()];
+          finalStream = new MediaStream(tracks);
+        }
+      } catch (e) {
+        finalStream = canvasStream;
+      }
+
+      const mimeType = pickBestMimeType();
       let recorder;
       try {
-        recorder = new MediaRecorder(stream, {
+        recorder = new MediaRecorder(finalStream, {
           mimeType: mimeType,
           videoBitsPerSecond: 5000000
         });
@@ -1027,7 +1066,6 @@
         if (e.data && e.data.size > 0) chunks.push(e.data);
       };
 
-      const recordDurationMs = 5000; // تسجيل 5 ثوانٍ كاملة
       const startTime = performance.now();
       recorder.start();
 
@@ -1037,12 +1075,12 @@
         
         progressBar.style.width = (progress * 100).toFixed(0) + '%';
         percentEl.textContent = Math.round(progress * 100) + '%';
-        statusEl.textContent = `تسجيل حركة الفيديو... ${Math.round(progress * 100)}%`;
+        statusEl.textContent = `تسجيل الفيديو... ${Math.round(progress * 100)}%`;
 
-        // أ) رسم إطار الفيديو الحي المتحرك أولاً
+        // رسم إطار الفيديو الحي
         drawImageCover(ctx, videoEl, width, height);
 
-        // ب) رسم تدرج خفيف لتحسين وضوح النصوص فقط
+        // تدرج الإضاءة
         const gradient = ctx.createLinearGradient(0, 0, 0, height);
         gradient.addColorStop(0, 'rgba(0,0,0,0.55)');
         gradient.addColorStop(0.35, 'rgba(0,0,0,0.0)');
@@ -1051,7 +1089,7 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
 
-        // ج) رسم بطاقات النصوص الشفافة فوق الفيديو (بدون أي خلفية سوداء تغطي المشهد)
+        // رسم طبقة النصوص الشفافة
         ctx.drawImage(overlayCanvas, 0, 0, width, height);
 
         if (elapsed < recordDurationMs) {
@@ -1074,11 +1112,12 @@
 
         const previewVideo = document.getElementById('resultVideoPlayer');
         previewVideo.src = currentVideoUrl;
+        previewVideo.muted = false; // تشغيل صوت التلاوة في المعاينة
         previewVideo.play().catch(()=>{});
         
         const isMp4 = mimeType.includes('mp4');
         const badge = document.getElementById('formatBadge');
-        badge.textContent = isMp4 ? 'MP4' : 'WebM';
+        badge.textContent = `${isMp4 ? 'MP4' : 'WebM'} (${(recordDurationMs/1000).toFixed(1)}s)`;
 
         document.getElementById('shareVideoBtn').onclick = async () => {
           await shareVideoFile(currentVideoBlob, currentVideoMime);
@@ -1092,7 +1131,7 @@
       };
     }
 
-    // دالة المشاركة الرسمية بنظام iOS
+    // دالة المشاركة للآيفون
     async function shareVideoFile(blob, mimeType) {
       const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
       const file = new File([blob], `daily-story-${Date.now()}.${ext}`, { type: mimeType });
@@ -1114,7 +1153,6 @@
       return false;
     }
 
-    // دالة التنزيل في الملفات
     function downloadVideoFile(blob, mimeType) {
       const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
       const url = URL.createObjectURL(blob);
