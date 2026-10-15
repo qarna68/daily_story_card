@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>بطاقة اليوم الذكية</title>
   
   <!-- مكتبة الخطوط العربية والإنجليزية -->
@@ -44,7 +44,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Glassmorphism فاخر */
+    /* Glassmorphism */
     .glass-panel {
       background: rgba(18, 24, 38, 0.75);
       backdrop-filter: blur(20px);
@@ -85,7 +85,7 @@
       </div>
       <div>
         <h1 class="text-lg md:text-xl font-bold font-cairo text-white">بطاقة اليوم الذكية</h1>
-        <p class="text-xs text-slate-400">تصميم منساب مدمج بمواقيت الصلاة والطقس الحي</p>
+        <p class="text-xs text-slate-400">مواقيت الصلاة، الطقس، والحِكم اليومية مع دعم الفيديو الحقيقي</p>
       </div>
     </div>
     
@@ -109,7 +109,7 @@
           <span class="text-[11px] text-slate-400">تحديث لحظي</span>
         </div>
 
-        <!-- 1. إزاحة نصوص التاريخ رأسياً (مثبتة على -9px) -->
+        <!-- 1. إزاحة نصوص التاريخ رأسياً -->
         <div class="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
           <div class="flex items-center justify-between text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
@@ -129,7 +129,7 @@
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-location-dot text-rose-400"></i> المدينة (تظهر في شريط الصلوات)
+              <i class="fa-solid fa-location-dot text-rose-400"></i> المدينة (في شريط الصلوات)
             </label>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" id="cityToggle" checked onchange="toggleCityBadge(this.checked)" class="sr-only peer">
@@ -260,40 +260,40 @@
           <textarea id="quoteTextInput" rows="3" oninput="updateCardQuote(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none">"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ إِنَّ الَّذِينَ يَسْتَكْبِرُونَ عَنْ عِبَادَتِي سَيَدْخُلُونَ جَهَنَّمَ دَاخِرِينَ"</textarea>
         </div>
 
-        <!-- 7. توليد صور الذكاء الاصطناعي اللحظية والرفع -->
+        <!-- 7. اختيار الخلفية وتوليد صور AI -->
         <div class="space-y-2 pt-2 border-t border-slate-800/80">
           <div class="flex items-center justify-between">
             <label class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-              <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> توليد خلفيات بالذكاء الاصطناعي (لحظي)
+              <i class="fa-solid fa-photo-film text-indigo-400"></i> خلفية البطاقة (فيديو أو صورة)
             </label>
-            <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[10px]">AI Flux</span>
+            <span id="mediaTypeBadge" class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-700/50 text-[10px]">فيديو متحرك</span>
           </div>
 
-          <div class="flex gap-1.5">
-            <input type="text" id="customAiPrompt" placeholder="صف المشهد (شروق هادئ، مطر وسحاب، جبال مكة...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+          <!-- رفع فيديو أو صورة من ألبوم الصور -->
+          <label class="cursor-pointer w-full bg-slate-900 border border-dashed border-slate-700 hover:border-amber-500/60 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 text-center transition group">
+            <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-sm group-hover:scale-110 transition"></i>
+            <span class="text-xs font-medium text-slate-200">اختر فيديو أو صورة من جهازك</span>
+            <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
+          </label>
+
+          <!-- توليد صور AI -->
+          <div class="flex gap-1.5 pt-1">
+            <input type="text" id="customAiPrompt" placeholder="صف مشهد للتوليد (شروق هادئ، جبال، رمال...)" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
             <button onclick="generateFreshAiImage()" id="generateAiBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition whitespace-nowrap shadow-md shadow-indigo-600/20">
-              <i class="fa-solid fa-bolt"></i> <span>توليد الآن</span>
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <span>توليد بالذكاء</span>
             </button>
-          </div>
-
-          <div class="pt-1">
-            <label class="cursor-pointer w-full bg-slate-900/60 border border-dashed border-slate-700 hover:border-amber-500/60 py-2 rounded-xl flex items-center justify-center gap-2 text-center transition">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-400 text-xs"></i>
-              <span class="text-xs font-medium text-slate-300">أو رفع صورة/فيديو من ألبوم الصور</span>
-              <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="handleUserMediaUpload(event)">
-            </label>
           </div>
         </div>
 
       </div>
 
-      <!-- زر الحفظ في ألبوم الصور للآيفون -->
+      <!-- الزر الرئيسي للحفظ (يتكيف تلقائياً بين صورة وفيديو) -->
       <div class="space-y-2">
-        <button id="saveMainBtn" onclick="saveCardDirectly()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
-          <i class="fa-solid fa-download text-base"></i>
-          <span>حفظ البطاقة في ألبوم الصور (آيفون)</span>
+        <button id="saveMainBtn" onclick="handleMainExport()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold font-cairo text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+          <i id="saveBtnIcon" class="fa-solid fa-film text-base"></i>
+          <span id="saveBtnLabel">حفظ الفيديو في ألبوم الصور (آيفون)</span>
         </button>
-        <p class="text-[11px] text-center text-slate-400">تفتح نافذة المشاركة الأصلية للآيفون لاختيار "حفظ الصورة" مباشرة للكاميرا.</p>
+        <p class="text-[11px] text-center text-slate-400">يقوم بتسجيل حركة الفيديو بدقة وفتح نافذة الحفظ الرسمية للآيفون (Photos).</p>
       </div>
 
     </div>
@@ -310,14 +310,16 @@
         <!-- الحاوية الأساسية للبطاقة -->
         <div id="storyCard" class="relative rounded-[36px] overflow-hidden flex flex-col justify-between p-4 bg-black select-none text-white shadow-inner">
           
-          <!-- عنصر الصورة الحي -->
-          <img id="cardImageBg" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1080&q=80" class="absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-500" crossorigin="anonymous" alt="خلفية البطاقة">
+          <!-- عنصر الفيديو الحي للخلفية -->
+          <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0" playsinline webkit-playsinline muted loop autoplay crossorigin="anonymous">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-bird-on-a-branch-at-sunset-41484-large.mp4" type="video/mp4">
+          </video>
 
-          <!-- عنصر الفيديو الحي (محتفظ به لاستكماله لاحقاً) -->
-          <video id="cardVideoBg" class="absolute inset-0 w-full h-full object-cover z-0 hidden" playsinline webkit-playsinline muted loop autoplay crossorigin="anonymous"></video>
+          <!-- عنصر الصورة الحي (مخفي افتراضياً لأن الفيديو مفعل) -->
+          <img id="cardImageBg" src="" class="absolute inset-0 w-full h-full object-cover z-0 hidden transition-opacity duration-500" crossorigin="anonymous" alt="خلفية البطاقة">
 
           <!-- تدرج إضاءة سينمائي ناعم -->
-          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
+          <div id="gradientOverlay" class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-[1]"></div>
 
           <!-- ==============================
                القسم العلوي: التاريخ والحكمة
@@ -353,7 +355,7 @@
 
           </div>
 
-          <!-- مساحة مرنة وسطية رحبة وواسعة جداً تبرز جمالية الصورة المولدة بدون أي مربعات معترضة -->
+          <!-- مساحة مرنة وسطية رحبة وواسعة جداً تبرز حركة الفيديو دون حجب -->
           <div class="flex-grow min-h-[190px] pointer-events-none"></div>
 
           <!-- ==============================
@@ -368,10 +370,10 @@
               </span>
             </div>
 
-            <!-- بطاقة مواقيت الصلاة مع شريط الطقس والمدينة المدمج في الأعلى بدون مربعات منفصلة -->
+            <!-- بطاقة مواقيت الصلاة مع شريط الطقس والمدينة المدمج -->
             <div id="prayerScheduleBox" class="glass-panel rounded-2xl p-3 border border-white/10 space-y-2.5">
               
-              <!-- الشريط الرأسي العلوي الموحد (المدينة ومواقيت الصلاة يميناً + الطقس الحي نهاراً وليلاً يساراً) -->
+              <!-- الشريط الرأسي العلوي الموحد -->
               <div class="flex items-center justify-between pb-2 border-b border-white/10 text-xs">
                 
                 <!-- اليمين: عنوان الصلوات مع اسم المدينة بجانبه مباشرة -->
@@ -383,7 +385,7 @@
                   </span>
                 </div>
 
-                <!-- اليسار: الطقس الحي بدون مربع (أيقونة متحركة شمس/قمر + الحالة + الحرارة) -->
+                <!-- اليسار: الطقس الحي بدون مربع (أيقونة شمس/قمر + الحالة + الحرارة) -->
                 <div id="headerWeatherContainer" class="flex items-center gap-1.5 text-[11px] text-amber-200 bg-white/5 py-0.5 px-2 rounded-full border border-white/10">
                   <span id="weatherDynamicIcon" class="text-xs text-amber-400">☀️</span>
                   <span id="weatherDescDisplay" class="text-slate-200 arabic-clean">صافٍ تماماً</span>
@@ -434,12 +436,64 @@
 
   </main>
 
+  <!-- شاشة تقدم تسجيل الفيديو -->
+  <div id="videoOverlay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4 text-center">
+    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl mb-4 animate-bounce">
+      <i class="fa-solid fa-film"></i>
+    </div>
+    <h3 class="text-base font-bold text-white font-cairo mb-1">🎬 جاري تسجيل حركة الفيديو...</h3>
+    <p class="text-xs text-slate-400 max-w-xs mb-3">يتم دمج حركة الفيديو الحية مع البطاقات بدقة فائقة</p>
+    
+    <div class="w-64 bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+      <div id="videoProgressBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-0 transition-all duration-150"></div>
+    </div>
+    <div class="text-xl font-bold font-mono text-amber-400 mt-2" id="videoPercent">0%</div>
+    <div class="text-xs text-slate-400 mt-1" id="videoStatus">بدء المعالجة...</div>
+  </div>
+
+  <!-- نافذة المعاينة والحفظ الذكي للآيفون المستخرجة من كودك -->
+  <div id="videoPreviewModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-sm w-full p-5 text-center space-y-3.5 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white font-cairo flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-emerald-400"></i> الفيديو جاهز ومتحرك
+        </h3>
+        <span id="formatBadge" class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full font-bold">MP4</span>
+      </div>
+
+      <!-- مشغل معاينة الفيديو الناتج -->
+      <div class="rounded-2xl overflow-hidden bg-black aspect-[9/16] max-h-60 mx-auto border border-white/10 shadow-lg">
+        <video id="resultVideoPlayer" class="w-full h-full object-cover" controls playsinline autoplay loop muted></video>
+      </div>
+
+      <!-- أزرار الإجراءات المستخرجة من كودك -->
+      <div class="space-y-2 pt-1">
+        <button type="button" id="shareVideoBtn" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl text-xs font-cairo shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-share-nodes"></i> فتح نافذة الحفظ بالآيفون (Photos)
+        </button>
+        
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="downloadVideoBtn" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-folder-arrow-down"></i> حفظ في الملفات
+          </button>
+          <button type="button" onclick="closeVideoPreview()" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-medium">
+            إغلاق
+          </button>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-slate-400 leading-relaxed pt-1" id="videoHint">
+        💡 <b>لحفظ الفيديو في تطبيق الصور:</b> اضغط الزر الأخضر بالأعلى ثم اختر <b>"حفظ الفيديو / Save Video"</b> من قائمة مشاركة iOS.
+      </p>
+    </div>
+  </div>
+
   <!-- نافذة GitHub -->
   <div id="githubModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="glass-panel bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="text-sm font-bold text-white flex items-center gap-2 font-cairo">
-          <i class="fa-brands fa-github text-amber-400"></i> خطوات ربط المشروع في GitHub ورفع الموقع
+          <i class="fa-brands fa-github text-amber-400"></i> خطوات تحديث الكود في GitHub
         </h3>
         <button onclick="toggleGithubModal()" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark"></i>
@@ -447,17 +501,17 @@
       </div>
 
       <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
-        <p>استضافة التطبيق مجاناً عبر <strong>GitHub Pages</strong>:</p>
+        <p>لتحديث الكود على <strong>GitHub Pages</strong>:</p>
         
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 font-mono text-[11px] text-amber-300/90" dir="ltr">
           <p class="text-slate-500"># تحديث الملف على المستودع</p>
           <p>git add index.html</p>
-          <p>git commit -m "دمج الطقس والمدينة وتفعيل شمس/قمر"</p>
+          <p>git commit -m "حل تسجيل وحفظ الفيديو المتحرك للآيفون"</p>
           <p>git push origin main</p>
         </div>
 
         <ol class="list-decimal list-inside space-y-1.5 text-slate-300 text-[12px]">
-          <li>استبدل ملف <code class="text-amber-300">index.html</code> في مستودعك بالكود المحدث.</li>
+          <li>استبدل محتوى <code class="text-amber-300">index.html</code> في مستودعك بالكود المحدث.</li>
           <li>سيقوم GitHub بتحديث الصفحة فوراً على رابطك الخاص.</li>
         </ol>
       </div>
@@ -468,9 +522,13 @@
     </div>
   </div>
 
-  <!-- منطق التطبيق البرمجي -->
+  <!-- منطق التطبيق البرمجي الشامل -->
   <script>
+    let currentMediaType = 'video'; // 'video' أو 'image'
     let currentCity = 'Jeddah';
+    let currentVideoBlob = null;
+    let currentVideoMime = '';
+    let currentVideoUrl = '';
 
     const cityArabicNames = {
       'Jeddah': 'جدة',
@@ -520,6 +578,12 @@
       adjustDateOffset(-9);
       fetchPrayers(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
       fetchWeather(cityCoordinates['Jeddah'].lat, cityCoordinates['Jeddah'].lng);
+      
+      const v = document.getElementById('cardVideoBg');
+      if (v) {
+        v.muted = true;
+        v.play().catch(()=>{});
+      }
     });
 
     // 1. التاريخ الهجري والميلادي
@@ -548,7 +612,6 @@
       }
     }
 
-    // إزاحة نصوص التاريخ
     function adjustDateOffset(val) {
       document.getElementById('dateOffsetValue').textContent = `${val}px`;
       const elements = document.querySelectorAll('.date-movable');
@@ -557,14 +620,12 @@
       });
     }
 
-    // الخطوط العربية للحكمة
     function updateQuoteFont(fontClass) {
       const quoteEl = document.getElementById('quoteTextDisplay');
       quoteEl.className = quoteEl.className.replace(/font-\w+/g, '');
       quoteEl.classList.add(fontClass, 'text-lg', 'md:text-xl', 'text-amber-100', 'font-bold', 'arabic-clean', 'leading-relaxed', 'm-0', 'p-0', 'text-center', 'flex', 'items-center', 'justify-center', 'transition-all');
     }
 
-    // حقوق التصميم
     function updateWatermarkText(text) {
       document.getElementById('watermarkTextDisplay').textContent = text.trim() || '';
     }
@@ -595,7 +656,7 @@
       else el.classList.add('hidden');
     }
 
-    // 2. توليد صور بالذكاء الاصطناعي (مع حجب العلامات المائية)
+    // 2. توليد صور الذكاء الاصطناعي اللحظية
     async function generateFreshAiImage() {
       const btn = document.getElementById('generateAiBtn');
       const input = document.getElementById('customAiPrompt');
@@ -613,7 +674,6 @@
 
       const fullPrompt = encodeURIComponent(`${promptText}, majestic cinematic lighting, 8k, photorealistic, vertical story wallpaper, clean frame, no watermark, no logo, no signature`);
       const randomSeed = Math.floor(Math.random() * 9999999);
-      
       const aiImageUrl = `https://image.pollinations.ai/prompt/${fullPrompt}?width=720&height=1280&seed=${randomSeed}&nologo=true&model=flux`;
 
       const tempImg = new Image();
@@ -624,12 +684,19 @@
         videoEl.classList.add('hidden');
         videoEl.pause();
         
+        currentMediaType = 'image';
+        updateSaveButtonState();
+        
         btn.innerHTML = originalBtnHTML;
         btn.disabled = false;
         document.getElementById('mediaTypeBadge').textContent = 'صورة AI جديدة';
       };
       tempImg.onerror = () => {
         imgEl.src = `https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1080&q=80&sig=${randomSeed}`;
+        imgEl.classList.remove('hidden');
+        videoEl.classList.add('hidden');
+        currentMediaType = 'image';
+        updateSaveButtonState();
         btn.innerHTML = originalBtnHTML;
         btn.disabled = false;
       };
@@ -654,7 +721,7 @@
       }
     }
 
-    // 4. جلب حالة الطقس وتحديد (شمس / قمر) بحسب الوقت الفعلي
+    // 4. جلب الطقس وتحديد (شمس / قمر)
     async function fetchWeather(lat, lng) {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`);
@@ -662,7 +729,7 @@
         if (data && data.current_weather) {
           const temp = Math.round(data.current_weather.temperature);
           const code = data.current_weather.weathercode;
-          const isDay = data.current_weather.is_day === 1; // 1 نهار، 0 ليل
+          const isDay = data.current_weather.is_day === 1;
 
           const status = getWeatherVisuals(code, isDay);
           
@@ -676,7 +743,6 @@
       }
     }
 
-    // نظام الأيقونات المزدوج لليل والنهار
     function getWeatherVisuals(code, isDay) {
       if (code === 0) {
         return {
@@ -766,6 +832,7 @@
       updateCardQuote(random);
     }
 
+    // رفع الوسائط (فيديو أو صورة)
     function handleUserMediaUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -774,27 +841,101 @@
       const videoEl = document.getElementById('cardVideoBg');
 
       if (file.type.startsWith('video/')) {
+        currentMediaType = 'video';
         const fileUrl = URL.createObjectURL(file);
         videoEl.src = fileUrl;
         videoEl.classList.remove('hidden');
         imgEl.classList.add('hidden');
+        videoEl.muted = true;
         videoEl.play();
-        document.getElementById('mediaTypeBadge').textContent = 'فيديو';
+        
+        document.getElementById('mediaTypeBadge').textContent = 'فيديو مخصص';
+        updateSaveButtonState();
       } else if (file.type.startsWith('image/')) {
+        currentMediaType = 'image';
         const reader = new FileReader();
         reader.onload = (event) => {
           imgEl.src = event.target.result;
           imgEl.classList.remove('hidden');
           videoEl.classList.add('hidden');
           videoEl.pause();
-          document.getElementById('mediaTypeBadge').textContent = 'صورة';
+          document.getElementById('mediaTypeBadge').textContent = 'صورة مخصصة';
+          updateSaveButtonState();
         };
         reader.readAsDataURL(file);
       }
     }
 
-    // حفظ البطاقة في ألبوم صور الآيفون بدقة فائقة
-    async function saveCardDirectly() {
+    function updateSaveButtonState() {
+      const btnLabel = document.getElementById('saveBtnLabel');
+      const btnIcon = document.getElementById('saveBtnIcon');
+      if (currentMediaType === 'video') {
+        btnLabel.textContent = 'حفظ الفيديو في ألبوم الصور (آيفون)';
+        btnIcon.className = 'fa-solid fa-film text-base';
+      } else {
+        btnLabel.textContent = 'حفظ الصورة في ألبوم الصور (آيفون)';
+        btnIcon.className = 'fa-solid fa-download text-base';
+      }
+    }
+
+    // ==============================================================
+    // الدوال المستخرجة والمسؤولة عن الفيديو والمطابقة لكودك
+    // ==============================================================
+
+    // 1. اختيار أفضل صيغة فيديو للآيفون من كودك
+    function pickBestMimeType() {
+      const candidates = [
+        'video/mp4;codecs=avc1.64001E',
+        'video/mp4;codecs=avc1.4D401E',
+        'video/mp4;codecs=avc1.42E01E',
+        'video/mp4;codecs=h264',
+        'video/mp4;codecs=avc1',
+        'video/mp4',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm'
+      ];
+      for (const c of candidates) {
+        try {
+          if (MediaRecorder.isTypeSupported(c)) return c;
+        } catch (e) {}
+      }
+      return 'video/webm';
+    }
+
+    // رسم صورة أو فيديو بنمط Object-Cover دون أي مط
+    function drawImageCover(ctx, media, targetW, targetH) {
+      const mWidth = media.videoWidth || media.naturalWidth || media.width;
+      const mHeight = media.videoHeight || media.naturalHeight || media.height;
+      if (!mWidth || !mHeight) return;
+
+      const scale = Math.max(targetW / mWidth, targetH / mHeight);
+      const drawW = mWidth * scale;
+      const drawH = mHeight * scale;
+      const drawX = (targetW - drawW) / 2;
+      const drawY = (targetH - drawH) / 2;
+
+      ctx.drawImage(media, drawX, drawY, drawW, drawH);
+    }
+
+    // زر الحفظ الرئيسي
+    function handleMainExport() {
+      const videoEl = document.getElementById('cardVideoBg');
+      if (currentMediaType === 'video') {
+        // تشغيل فوري للفيديو بحركة حية تحت لمسة المستخدم
+        if (videoEl) {
+          videoEl.muted = true;
+          videoEl.currentTime = 0;
+          videoEl.play().catch(()=>{});
+        }
+        exportMotionVideo();
+      } else {
+        exportStaticImage();
+      }
+    }
+
+    // تصدير الصورة الثابتة
+    async function exportStaticImage() {
       const card = document.getElementById('storyCard');
       const btn = document.getElementById('saveMainBtn');
       const originalBtnText = btn.innerHTML;
@@ -820,14 +961,7 @@
               title: 'بطاقة اليوم'
             });
           } else {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `daily-card-${Date.now()}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            downloadBlobDirectly(blob, `daily-card-${Date.now()}.png`);
           }
           btn.innerHTML = originalBtnText;
           btn.disabled = false;
@@ -838,6 +972,182 @@
         btn.innerHTML = originalBtnText;
         btn.disabled = false;
       }
+    }
+
+    // تصدير الفيديو الحي بالكامل دون تجميد الحركة
+    async function exportMotionVideo() {
+      const videoEl = document.getElementById('cardVideoBg');
+      const card = document.getElementById('storyCard');
+      const videoOverlay = document.getElementById('videoOverlay');
+      const progressBar = document.getElementById('videoProgressBar');
+      const percentEl = document.getElementById('videoPercent');
+      const statusEl = document.getElementById('videoStatus');
+
+      videoOverlay.classList.remove('hidden');
+      progressBar.style.width = '5%';
+      percentEl.textContent = '5%';
+      statusEl.textContent = 'تجهيز طبقات النصوص...';
+
+      // 1. التقاط بطاقات النصوص فقط دون إخفاء الفيديو إطلاقاً (سر منع تجمد سفاري)
+      await document.fonts.ready;
+      const overlayCanvas = await html2canvas(card, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        ignoreElements: (el) => el.id === 'cardVideoBg' || el.id === 'cardImageBg' || el.id === 'gradientOverlay'
+      });
+
+      // 2. إعداد كانفاس التسجيل بالأبعاد الصريحة 720x1280
+      const width = 720;
+      const height = 1280;
+      const renderCanvas = document.createElement('canvas');
+      renderCanvas.width = width;
+      renderCanvas.height = height;
+      const ctx = renderCanvas.getContext('2d');
+
+      // 3. التأكد التام من تشغيل الفيديو بحركة متدفقة
+      videoEl.muted = true;
+      if (videoEl.paused) await videoEl.play().catch(()=>{});
+
+      const FPS = 24;
+      const stream = renderCanvas.captureStream(FPS);
+      const mimeType = pickBestMimeType();
+
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, {
+          mimeType: mimeType,
+          videoBitsPerSecond: 5000000
+        });
+      } catch (e) {
+        videoOverlay.classList.add('hidden');
+        alert('تعذر بدء مسجل الفيديو: ' + e.message);
+        return;
+      }
+
+      const chunks = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      // مدة التسجيل 5 ثوانٍ كاملة
+      const recordDurationMs = 5000;
+      const startTime = performance.now();
+      recorder.start();
+
+      function drawFrame() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / recordDurationMs, 1);
+        
+        progressBar.style.width = (progress * 100).toFixed(0) + '%';
+        percentEl.textContent = Math.round(progress * 100) + '%';
+        statusEl.textContent = `تسجيل الحركة... ${Math.round(progress * 100)}%`;
+
+        // رسم إطار الفيديو الحي المتغير
+        drawImageCover(ctx, videoEl, width, height);
+
+        // رسم التدرج السينمائي الناعم
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, 'rgba(0,0,0,0.6)');
+        gradient.addColorStop(0.5, 'rgba(0,0,0,0.0)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // رسم بطاقات النصوص والمواقيت فوق الفيديو
+        ctx.drawImage(overlayCanvas, 0, 0, width, height);
+
+        if (elapsed < recordDurationMs) {
+          requestAnimationFrame(drawFrame);
+        } else {
+          recorder.stop();
+        }
+      }
+
+      requestAnimationFrame(drawFrame);
+
+      recorder.onstop = () => {
+        videoOverlay.classList.add('hidden');
+        const recordedBlob = new Blob(chunks, { type: mimeType });
+        currentVideoBlob = recordedBlob;
+        currentVideoMime = mimeType;
+
+        if (currentVideoUrl) URL.revokeObjectURL(currentVideoUrl);
+        currentVideoUrl = URL.createObjectURL(recordedBlob);
+
+        // إظهار نافذة المعاينة المباشرة المأخوذة من كودك
+        const previewVideo = document.getElementById('resultVideoPlayer');
+        previewVideo.src = currentVideoUrl;
+        
+        const isMp4 = mimeType.includes('mp4');
+        const badge = document.getElementById('formatBadge');
+        badge.textContent = isMp4 ? 'MP4' : 'WebM';
+
+        // ربط أزرار المشاركة والحفظ من كودك
+        document.getElementById('shareVideoBtn').onclick = async () => {
+          await shareVideoFile(currentVideoBlob, currentVideoMime);
+        };
+
+        document.getElementById('downloadVideoBtn').onclick = () => {
+          downloadVideoFile(currentVideoBlob, currentVideoMime);
+        };
+
+        document.getElementById('videoPreviewModal').classList.remove('hidden');
+      };
+    }
+
+    // دالة المشاركة الرسمية بنظام iOS من كودك
+    async function shareVideoFile(blob, mimeType) {
+      const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+      const file = new File([blob], `daily-story-${Date.now()}.${ext}`, { type: mimeType });
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'بطاقة اليوم'
+          });
+          return true;
+        } catch (e) {
+          if (e.name !== 'AbortError') alert('تعذرت المشاركة: ' + e.message);
+          return false;
+        }
+      } else {
+        downloadVideoFile(blob, mimeType);
+      }
+      return false;
+    }
+
+    // دالة التحميل للملفات من كودك
+    function downloadVideoFile(blob, mimeType) {
+      const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `daily-story-${Date.now()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    function downloadBlobDirectly(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    function closeVideoPreview() {
+      const previewVideo = document.getElementById('resultVideoPlayer');
+      try { previewVideo.pause(); } catch(e){}
+      previewVideo.src = '';
+      document.getElementById('videoPreviewModal').classList.add('hidden');
     }
 
     function toggleGithubModal() {
